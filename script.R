@@ -32,7 +32,50 @@ require(RColorBrewer)
 require(grid)
 
 
-# Manage data (base and derived) ------------------------------------------
+
+# ICD 08 data -------------------------------------------------------------
+
+# First I will look at the ICD 08 data I downloaded. This uses the 
+# CDC Compressed Mortality data file. I have included a variable 
+# giving different ICD codes so should be able to extract external, all cause, violent,
+# suicide and undetermined from this 
+
+icd_08 <- read_delim(
+  file = "data/icd_08_age_gender_race_year_icd chapter.txt", 
+  delim = "\t", 
+  na = "Not Applicable", 
+  col_types = paste(rep("c", 14), collapse = "")
+)
+
+# As the ICD codes here are the larger groups rather than subgroups, what they can provide is all cause and external
+# but not the sub-types of external of interest. These will have to be extracted separately 
+
+# Where there is no numerator, i.e. number of deaths, no denominator ie. population at risk is defined as well. 
+# This will have to be checked, and replaced with the true values 
+
+icd_08 %>% 
+  select(
+    race = Race, 
+    sex = Gender, 
+    year = Year,
+    age = `Age Group Code`,
+    icd = `ICD Chapter`, icd_code = `ICD Chapter Code`, 
+    death_count = Deaths, 
+    population_count = Population
+  ) %>% 
+  mutate(
+    race = recode(
+      race, 
+      "
+      'Black or African American' = 'black';
+      'White' = 'white';
+      'Other Race' = 'other'
+      "          
+                ),
+    sex = tolower(sex)
+  ) %>% 
+  group_by(race, sex, year, age) %>% 
+  summarise(n_popsize = length(unique(population_count)))
 
 
 
