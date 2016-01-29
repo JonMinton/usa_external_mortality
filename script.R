@@ -53,7 +53,7 @@ icd_08 <- read_delim(
 # Where there is no numerator, i.e. number of deaths, no denominator ie. population at risk is defined as well. 
 # This will have to be checked, and replaced with the true values 
 
-icd_08 %>% 
+icd_08_external <- icd_08 %>% 
   select(
     race = Race, 
     sex = Gender, 
@@ -74,8 +74,85 @@ icd_08 %>%
                 ),
     sex = tolower(sex)
   ) %>% 
+  mutate(
+    death_count = as.numeric(str_replace_all(death_count, ",", "")),
+    population_count = as.numeric(str_replace_all(population_count, ",", ""))
+  ) %>% 
   group_by(race, sex, year, age) %>% 
-  summarise(n_popsize = length(unique(population_count)))
+  mutate(population_count = max(population_count)) %>% # this changes population counts that are zere, because the death counts are zero, to the correct value
+  filter(icd_code == "E800-E999") %>% 
+  ungroup %>% 
+  filter(age != "NS") %>% 
+  mutate(
+    age = factor(
+      age, 
+      levels = c("1", "1-4", "5-9", "10-14", "15-19", "20-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-84", "85+"), 
+      ordered = T)
+    ) %>% 
+  ungroup %>% 
+  mutate(cause = "all_external") %>% 
+  select(race, sex, year, age, cause, death_count, population_count)
+  
+
+icd_08_allcause <- icd_08 %>% 
+  select(
+    race = Race, 
+    sex = Gender, 
+    year = Year,
+    age = `Age Group Code`,
+    icd = `ICD Chapter`, icd_code = `ICD Chapter Code`, 
+    death_count = Deaths, 
+    population_count = Population
+  ) %>% 
+  mutate(
+    race = recode(
+      race, 
+      "
+      'Black or African American' = 'black';
+      'White' = 'white';
+      'Other Race' = 'other'
+      "          
+    ),
+    sex = tolower(sex)
+    ) %>%  
+  filter(age != "NS") %>% 
+  mutate(
+    age = factor(
+      age, 
+      levels = c("1", "1-4", "5-9", "10-14", "15-19", "20-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-84", "85+"), 
+      ordered = T)
+  ) %>% 
+  group_by(race, sex, year, age) %>% 
+  mutate(population_count = max(population_count)) %>% # this changes population counts that are zere, because the death counts are zero, to the correct value
+  mutate(
+    death_count = as.numeric(str_replace_all(death_count, ",", "")),
+    population_count = as.numeric(str_replace_all(population_count, ",", ""))
+  ) %>% 
+  summarise(
+    death_count = sum(death_count),
+    population_count = population_count[1]
+    ) %>% 
+  ungroup %>% 
+  mutate(cause = "all_cause") %>% 
+  select(race, sex, year, age, cause, death_count, population_count)
+
+# want non-external
+
+tmp1 <- icd_08_allcause %>% 
+  bind_rows(icd_08_external) %>% 
+  select(-population_count) %>% 
+  spread(cause, death_count) %>% 
+  mutate(non_external = all_cause - all_external) %>% 
+  gather(key = cause, value = death_count, -race, -sex, -year, -age) 
+
+tmp2 <- icd_08_allcause %>% select(race, sex, year, age, population_count)
+
+icd_08_3cause <- tmp1  %>% left_join(tmp2)
+
+rm(icd_08_3groups, icd_08_allcause, icd_08_external)
+
+
+# Now to do something similar with ICD 9 
 
 
 
