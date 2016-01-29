@@ -156,6 +156,97 @@ rm(icd_08_3groups, icd_08_allcause, icd_08_external)
 
 
 
+icd_09 <- read_delim(
+  file = "data/icd_09_age_gender_race_year_icd chapter.txt", 
+  delim = "\t", 
+  na = "Not Applicable", 
+  col_types = paste(rep("c", 14), collapse = "")
+)
+
+
+icd_09_all_external <- icd_09 %>% select(
+  notes = Notes, year = Year, age = `Age Group Code`, sex = Gender, race = Race,
+  icd = `ICD Chapter`, icd_code = `ICD Chapter Code`, death_count = Deaths, population_count = Population
+) %>% 
+  mutate(
+    race = recode(
+      race, 
+      "
+      'Black or African American' = 'black';
+      'White' = 'white';
+      'Other Race' = 'other'
+      "          
+    ),
+    sex = tolower(sex)
+    ) %>% 
+  mutate(
+    death_count = as.numeric(str_replace_all(death_count, ",", "")),
+    population_count = as.numeric(str_replace_all(population_count, ",", ""))
+  ) %>% 
+  group_by(race, sex, year, age) %>% 
+  mutate(population_count = max(population_count)) %>% # this changes population counts that are zere, because the death counts are zero, to the correct value
+  filter(icd_code == "E800-E999") %>% 
+  ungroup %>% 
+  filter(age != "NS") %>% 
+  mutate(
+    age = factor(
+      age, 
+      levels = c("1", "1-4", "5-9", "10-14", "15-19", "20-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-84", "85+"), 
+      ordered = T)
+  ) %>% 
+  ungroup %>% 
+  mutate(cause = "all_external") %>% 
+  select(race, sex, year, age, cause, death_count, population_count)
+
+# All cause - looking at total in notes
+
+icd_09_all_cause <- icd_09 %>% select(
+  notes = Notes, year = Year, age = `Age Group Code`, sex = Gender, race = Race,
+  icd = `ICD Chapter`, icd_code = `ICD Chapter Code`, death_count = Deaths, population_count = Population
+) %>% 
+  filter(notes == "Total") %>% 
+  mutate(
+    race = recode(
+      race, 
+      "
+      'Black or African American' = 'black';
+      'White' = 'white';
+      'Other Race' = 'other'
+      "          
+    ),
+    sex = tolower(sex)
+  ) %>% 
+  mutate(
+    death_count = as.numeric(str_replace_all(death_count, ",", "")),
+    population_count = as.numeric(str_replace_all(population_count, ",", ""))
+  ) %>% 
+  filter(age != "NS") %>% 
+  mutate(
+    age = factor(
+      age, 
+      levels = c("1", "1-4", "5-9", "10-14", "15-19", "20-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-84", "85+"), 
+      ordered = T)
+  ) %>% 
+  mutate(cause = "all_cause") %>% 
+  select(race, sex, year, age, cause, death_count, population_count)
+
+
+tmp1 <- icd_09_all_cause %>% 
+  bind_rows(icd_09_all_external) %>% 
+  select(-population_count) %>% 
+  spread(cause, death_count) %>% 
+  mutate(non_external = all_cause - all_external) %>% 
+  gather(key = cause, value = death_count, -race, -sex, -year, -age) 
+
+tmp2 <- icd_09_all_cause %>% select(race, sex, year, age, population_count)
+
+icd_09_3cause <- tmp1  %>% left_join(tmp2)
+
+icd_09_3cause <- icd_09_3cause %>% filter(race != "" & sex != "" & year != "")
+
+rm(tmp1, tmp2)
+
+
 # Progress : 
 #   
 #   Found and extracted data on legal intervention from 1968-1974
