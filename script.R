@@ -283,8 +283,305 @@ write_csv(icd_08_09_3cause, path = "data/tidied/icd_08_09_3cause.csv")
 
 # 8 cause, icd 8 ----------------------------------------------------------
 
+# all cause 
+
+icd_08_allcause <- read_delim(
+  "data/icd_08_year_age_race_gender_allcause.txt",
+  delim = "\t",
+  col_types = paste(rep("c", 12), collapse = "")
+  )
+
+icd_08_allcause <- icd_08_allcause %>% 
+  filter(Notes == "") %>% 
+  select(
+    year = Year, 
+    age = `Age Group Code`, 
+    race = Race,
+    sex = Gender,
+    death_count = Deaths,
+    population_count = Population
+    ) %>% 
+  filter(population_count != "Not Applicable") %>% 
+  mutate(
+    sex = tolower(sex),
+    r2 = recode(race, 
+                recodes = "
+                'Black or African American' = 'black';
+                'Other Race' = 'other';
+                'White' = 'white'
+                "
+    )
+    ) %>% 
+  mutate(cause = "all_cause") %>% 
+  mutate(icd_class = "icd_08") %>% 
+  select(icd_class, year, age, sex, race = r2, cause, death_count, population_count) %>% 
+  mutate(
+    death_count = as.numeric(death_count), 
+    population_count = as.numeric(population_count)
+  ) 
+  
+
+# all external 
 
 
+icd_08_allexternal <- read_delim(
+  "data/icd_08_year_age_race_gender_external.txt",
+  delim = "\t",
+  col_types = paste(rep("c", 12), collapse = "")
+)
+
+icd_08_allexternal <- icd_08_allexternal %>% 
+  filter(Notes == "") %>% 
+  select(
+    year = Year, 
+    age = `Age Group Code`, 
+    race = Race,
+    sex = Gender,
+    death_count = Deaths,
+    population_count = Population
+  ) %>% 
+  filter(population_count != "Not Applicable") %>% 
+  mutate(
+    sex = tolower(sex),
+    r2 = recode(race, 
+                recodes = "
+                'Black or African American' = 'black';
+                'Other Race' = 'other';
+                'White' = 'white'
+                "
+    )
+  ) %>% 
+  mutate(cause = "all_external") %>% 
+  mutate(icd_class = "icd_08") %>% 
+  select(icd_class, year, age, sex, race = r2, cause, death_count, population_count) %>% 
+  mutate(
+    death_count = as.numeric(death_count), 
+    population_count = as.numeric(population_count)
+  ) 
+
+
+# Subsequent categories taken from icd_subclass file
+
+
+
+icd_08_external <- read_delim(
+  "data/icd_08_year_age_race_gender_icd_sub_external.txt",
+  delim = "\t",
+  col_types = paste(rep("c", 14), collapse = "")
+)
+
+# asssault/homicide
+
+icd_08_assault <- icd_08_external %>% 
+  filter(`ICD Sub-Chapter Code` == "E960-E969") %>% 
+  filter(Notes == "") %>% 
+  select(
+    year = Year, 
+    age = `Age Group Code`, 
+    race = Race,
+    sex = Gender,
+    death_count = Deaths,
+    population_count = Population
+  ) %>% 
+  filter(population_count != "Not Applicable") %>% 
+  mutate(
+    sex = tolower(sex),
+    r2 = recode(race, 
+                recodes = "
+                'Black or African American' = 'black';
+                'Other Race' = 'other';
+                'White' = 'white'
+                "
+    )
+    ) %>% 
+  mutate(cause = "assault") %>% 
+  mutate(icd_class = "icd_08") %>% 
+  select(icd_class, year, age, sex, race = r2, cause, death_count, population_count) %>% 
+  mutate(
+    death_count = as.numeric(death_count), 
+    population_count = as.numeric(population_count)
+  ) 
+  # There's an issue with population counts being set at zero when the associated death count is zero# 
+  # this needs to be corrected with a merge from all cause mort
+
+icd_08_assault <- icd_08_allcause  %>% 
+  select(year, age, sex, race, p2 = population_count)  %>% 
+  inner_join(icd_08_assault, by = c("year", "age" ,"sex", "race"))  %>% 
+  select(icd_class, year, age, sex, race, cause, death_count, population_count = p2)
+
+# motor 
+
+icd_08_vehicle <- icd_08_external %>% 
+  filter(`ICD Sub-Chapter Code` == "E810-E819") %>% 
+  filter(Notes == "") %>% 
+  select(
+    year = Year, 
+    age = `Age Group Code`, 
+    race = Race,
+    sex = Gender,
+    death_count = Deaths,
+    population_count = Population
+  ) %>% 
+  filter(population_count != "Not Applicable") %>% 
+  mutate(
+    sex = tolower(sex),
+    r2 = recode(race, 
+                recodes = "
+                'Black or African American' = 'black';
+                'Other Race' = 'other';
+                'White' = 'white'
+                "
+    )
+  ) %>% 
+  mutate(cause = "vehicle") %>% 
+  mutate(icd_class = "icd_08") %>% 
+  select(icd_class, year, age, sex, race = r2, cause, death_count, population_count) %>% 
+  mutate(
+    death_count = as.numeric(death_count), 
+    population_count = as.numeric(population_count)
+  ) 
+# There's an issue with population counts being set at zero when the associated death count is zero# 
+# this needs to be corrected with a merge from all cause mort
+
+icd_08_vehicle <- icd_08_allcause  %>% 
+  select(year, age, sex, race, p2 = population_count)  %>% 
+  inner_join(icd_08_vehicle, by = c("year", "age" ,"sex", "race"))  %>% 
+  select(icd_class, year, age, sex, race, cause, death_count, population_count = p2)
+
+
+# intentional self harm
+icd_08_intent <- icd_08_external %>% 
+  filter(`ICD Sub-Chapter Code` == "E950-E959") %>% 
+  filter(Notes == "") %>% 
+  select(
+    year = Year, 
+    age = `Age Group Code`, 
+    race = Race,
+    sex = Gender,
+    death_count = Deaths,
+    population_count = Population
+  ) %>% 
+  filter(population_count != "Not Applicable") %>% 
+  mutate(
+    sex = tolower(sex),
+    r2 = recode(race, 
+                recodes = "
+                'Black or African American' = 'black';
+                'Other Race' = 'other';
+                'White' = 'white'
+                "
+    )
+  ) %>% 
+  mutate(cause = "intentional_self_harm") %>% 
+  mutate(icd_class = "icd_08") %>% 
+  select(icd_class, year, age, sex, race = r2, cause, death_count, population_count) %>% 
+  mutate(
+    death_count = as.numeric(death_count), 
+    population_count = as.numeric(population_count)
+  ) 
+# There's an issue with population counts being set at zero when the associated death count is zero# 
+# this needs to be corrected with a merge from all cause mort
+
+icd_08_intent <- icd_08_allcause  %>% 
+  select(year, age, sex, race, p2 = population_count)  %>% 
+  inner_join(icd_08_intent, by = c("year", "age" ,"sex", "race"))  %>% 
+  select(icd_class, year, age, sex, race, cause, death_count, population_count = p2)
+
+
+
+# undetermined self harm
+
+
+icd_08_undetermined <- icd_08_external %>% 
+  filter(`ICD Sub-Chapter Code` == "E980-E989") %>% 
+  filter(Notes == "") %>% 
+  select(
+    year = Year, 
+    age = `Age Group Code`, 
+    race = Race,
+    sex = Gender,
+    death_count = Deaths,
+    population_count = Population
+  ) %>% 
+  filter(population_count != "Not Applicable") %>% 
+  mutate(
+    sex = tolower(sex),
+    r2 = recode(race, 
+                recodes = "
+                'Black or African American' = 'black';
+                'Other Race' = 'other';
+                'White' = 'white'
+                "
+    )
+    ) %>% 
+  mutate(cause = "undetermined") %>% 
+  mutate(icd_class = "icd_08") %>% 
+  select(icd_class, year, age, sex, race = r2, cause, death_count, population_count) %>% 
+  mutate(
+    death_count = as.numeric(death_count), 
+    population_count = as.numeric(population_count)
+  ) 
+
+
+# There's an issue with population counts being set at zero when the associated death count is zero# 
+# this needs to be corrected with a merge from all cause mort
+
+icd_08_undetermined <- icd_08_allcause  %>% 
+  select(year, age, sex, race, p2 = population_count)  %>% 
+  inner_join(icd_08_undetermined, by = c("year", "age" ,"sex", "race"))  %>% 
+  select(icd_class, year, age, sex, race, cause, death_count, population_count = p2)
+
+
+
+# Derived ones: 
+
+# None external 
+
+tmp1 <- icd_08_allexternal %>% select(-population_count)
+tmp2 <- icd_08_allcause %>% select(-population_count)
+tmp4 <- icd_08_allcause %>% select(-cause, -death_count)
+tmp3 <- bind_rows(tmp1, tmp2)
+
+rm(tmp1, tmp2)
+
+icd_08_external_nonexternal_allcause <- tmp3 %>% 
+  spread(key = cause, value = death_count) %>% 
+  mutate(non_external = all_cause - all_external) %>% 
+  inner_join(tmp4, by = c("icd_class" ,"year", "age", "sex", "race")) %>% 
+  gather(key = "cause", value = "death_count", all_cause, all_external, non_external) %>% 
+  select(icd_class, year, age, sex, race, cause, death_count, population_count)
+
+rm(tmp3, tmp4)
+
+# undetermined and intentional 
+
+
+tmp1 <- icd_08_undetermined %>% select(-population_count)
+tmp2 <- icd_08_intent %>% select(-population_count)
+tmp3 <- icd_08_allcause %>% select(-cause, -death_count)
+tmp4 <- bind_rows(tmp1, tmp2)
+
+rm(tmp1, tmp2)
+
+icd_08_both_undetermined_intentional <- tmp4 %>% 
+  spread(key = cause, value = death_count) %>% 
+  mutate(intentional_or_undetermined_self_harm = intentional_self_harm + undetermined) %>% 
+  inner_join(tmp3, by = c("icd_class" ,"year", "age", "sex", "race")) %>% 
+  gather(key = "cause", value = "death_count", intentional_self_harm, undetermined, intentional_or_undetermined_self_harm) %>% 
+  select(icd_class, year, age, sex, race, cause, death_count, population_count)
+
+rm(tmp3, tmp4)
+
+
+
+# binding
+
+icd_08_8cause <- icd_08_both_undetermined_intentional %>% 
+  bind_rows(icd_08_assault) %>% 
+  bind_rows(icd_08_external_nonexternal_allcause) %>% 
+  bind_rows(icd_08_vehicle) 
+
+write_csv(icd_08_8cause, path = "data/tidied/icd_08_8cause.csv")
 
 # 8 causes - icd 9  -------------------------------------------------------
 
@@ -554,6 +851,15 @@ write_csv(icd_09_8cause, path = "data/tidied/icd_09_8cause.csv")
 
 
 
+
+# Binding of icd_08 and icd_09 together -----------------------------------
+
+icd_09_8cause <- read_csv(file = "data/tidied/icd_09_8cause.csv", col_types = "cccccccc")
+icd_08_8cause <- read_csv(file = "data/tidied/icd_08_8cause.csv", col_types = "cccccccc")
+
+icd_89_8cause <- icd_08_8cause %>% bind_rows(icd_09_8cause)
+
+write_csv(icd_89_8cause, path = "data/tidied_icd_08_09_joined_8cause.csv")
 
 # 8 causes, icd 10 --------------------------------------------------------
 
