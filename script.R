@@ -141,7 +141,9 @@ icd_8cat %>%
 ggsave("figures/ratio_of_bw_all_external_mort_by_age.png", width = 30, height = 30, units = "cm", dpi = 300)
 
 
-# 5) vehicle mortality trends, overall and by race + sex
+# # 5) vehicle mortality trends, overall and by race + sex
+
+
 
 icd_8cat %>% 
   filter(cause ==  "vehicle") %>% 
@@ -155,10 +157,33 @@ icd_8cat %>%
   ggplot(.) +
   geom_line(aes(x = year, y = death_rate, group = race, colour = race)) + 
   facet_wrap(~ sex) + 
-  labs(x = "Year", y = "Vehicle death rate per 100 000", title = "All Cause") + 
+  labs(x = "Year", y = "RTA death rate per 100 000", title = "Road Traffic Accidents") + 
   theme_minimal()
 
 ggsave(filename = "figures/vehicle_mortality.png", dpi = 300, width = 15, height = 10, units = "cm")
+
+# 6) BW ratio in vehicle mortality
+
+icd_8cat %>% 
+  filter(cause == "vehicle") %>% 
+  filter(!is.na(age)) %>% 
+  filter(race %in% c("white", "black")) %>%
+  mutate(death_rate = 100000 * death_count / population_count) %>% 
+  select(year, age, sex, race, death_rate) %>% 
+  spread(key = race, value = death_rate) %>% 
+  mutate(bw_ratio = black / white) %>% 
+  select(-black, -white) %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = bw_ratio, group = sex, colour = sex)) + 
+  facet_wrap(~ age) + 
+  labs(
+    title = "Ratio of male/white mortality due to assault/homicide at \ndifferent age groups",
+    x = "Year", y= "Ratio of black to white mortality"
+  )  + geom_hline(aes(yintercept = 1)) + 
+  scale_y_log10(breaks = c(0.1, 0.2, 0.5, 1, 2, 5, 10, 20))
+
+
+ggsave(filename = "figures/bw_ratio_motor_mortality.png", dpi = 300, width = 15, height = 10, units = "cm")
 
 
 # 6) assault mortality trends, overall and by race + sex
@@ -174,6 +199,75 @@ icd_8cat %>%
   ggplot(.) +
   geom_line(aes(x = year, y = death_rate, group = race, colour = race)) + 
   facet_wrap(~ sex) + 
-  labs(x = "Year", y = "assault/homicide death rate per 100 000", title = "All Cause") + 
+  labs(x = "Year", y = "assault/homicide death rate per 100 000", title = "Assault/Homicide") + 
   theme_minimal()
+
+ggsave(filename = "figures/assault_homicide_mortality.png", dpi = 300, width = 15, height = 10, units = "cm")
+
+
+# 6) BW ratio in assault mortality trends
+
+icd_8cat %>% 
+  filter(cause == "assault") %>% 
+  filter(!is.na(age)) %>% 
+  filter(race %in% c("white", "black")) %>%
+  mutate(death_rate = 100000 * death_count / population_count) %>% 
+  select(year, age, sex, race, death_rate) %>% 
+  spread(key = race, value = death_rate) %>% 
+  mutate(bw_ratio = black / white) %>% 
+  select(-black, -white) %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = bw_ratio, group = sex, colour = sex)) + 
+  facet_wrap(~ age) + 
+  labs(
+    title = "Ratio of male/white mortality due to assault/homicide at \ndifferent age groups",
+    x = "Year", y= "Ratio of black to white mortality"
+  ) + geom_hline(aes(yintercept = 1)) + 
+  scale_y_log10(breaks = c(1, 2, 5, 10, 20))
+
+ggsave(filename = "figures/bw_ratio_assault_homicide_mortality.png", dpi = 300, width = 15, height = 10, units = "cm")
+
+
+# 6) undetermined, by age group, race + sex
+icd_8cat %>% 
+  filter(cause ==  "intentional_or_undetermined_self_harm") %>% 
+  select(-cause) %>% 
+  group_by(icd_class, year, sex, race) %>% 
+  summarise(
+    death_count = sum(death_count), 
+    population_count = sum(population_count)
+  ) %>% 
+  mutate(death_rate = 100000 * death_count / population_count) %>% 
+  ggplot(.) +
+  geom_line(aes(x = year, y = death_rate, group = race, colour = race)) + 
+  facet_wrap(~ sex) + 
+  labs(x = "Year", y = "self-harm death rate per 100 000", title = "Self harm (intended or undetermined)") + 
+  theme_minimal()
+
+ggsave(filename = "figures/selfharm_mortality.png", dpi = 300, width = 15, height = 10, units = "cm")
+
+
+# 6) BW ratio in self harm trends
+
+icd_8cat %>% 
+  filter(cause == "intentional_or_undetermined_self_harm") %>% 
+  filter(!is.na(age)) %>% 
+  filter(race %in% c("white", "black")) %>%
+  mutate(death_rate = 100000 * death_count / population_count) %>% 
+  select(year, age, sex, race, death_rate) %>% 
+  spread(key = race, value = death_rate) %>% 
+  mutate(bw_ratio = black / white) %>% 
+  select(-black, -white) %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = bw_ratio, group = sex, colour = sex)) + 
+  facet_wrap(~ age) + 
+  labs(
+    title = "Ratio of male/white mortality due to assault/homicide at \ndifferent age groups",
+    x = "Year", y= "Ratio of black to white mortality"
+  ) + geom_hline(aes(yintercept = 1)) + 
+  scale_y_log10()
+
+ggsave(filename = "figures/bw_ratio_assault_homicide_mortality.png", dpi = 300, width = 15, height = 10, units = "cm")
+
+
 

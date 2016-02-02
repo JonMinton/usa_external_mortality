@@ -395,10 +395,9 @@ icd_09_icdsub <- read_delim(
   col_types = paste(rep("c", 14), collapse = "")
 )
 
-# Motor related 
+# vehicle related 
 icd_09_motor <- icd_09_icdsub %>% 
-  filter(`ICD Sub-Chapter Code` %in% c(
-    "E810-E819", "E820-E825", "E826-E829")) %>% 
+  filter(`ICD Sub-Chapter Code` == "E810-E819") %>% 
   filter(Notes == "") %>% 
   select(year = Year, age = `Age Group Code`, sex = Gender, race = Race, 
          death_count = Deaths, population_count = Population) %>% 
@@ -410,7 +409,7 @@ icd_09_motor <- icd_09_icdsub %>%
   group_by(year, age, sex, race) %>% 
   summarise(
     death_count = sum(death_count), 
-    population_count = sum(population_count)
+    population_count = max(population_count)
   ) %>% 
   ungroup %>% 
   mutate(
