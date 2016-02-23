@@ -15,3 +15,4 @@ dta <- read_csv("data/tidied/icd_8_to_10_8fold.csv")
 
 write.dta(dta, "data/tidied/icd_8_to_10_8fold.dta")
 
+write.table(dta, file = "data/tidied/icd_8_to_10_8fold.txt", row.names = F)

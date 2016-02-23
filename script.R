@@ -44,6 +44,80 @@ icd_8cat <- icd_8cat %>% mutate(
     )
   )
 
+
+
+# Jon,
+# 
+# Please run the trends (1968-2014) for homicide, suicide, and vehicle accident death rates 
+# by race-sex groups (i.e., black females, black males, white females, and white males), 
+# age group (set 3 groups: children/adolescents (ages 10-19), adults (20-54), and older adults (55-84)). 
+# Mark the presidential years by party as follows:
+#   
+
+age_group_icd <- icd_8cat %>% 
+  mutate(age_group = recode(
+    age, 
+    recodes = "
+      c('< 1', '1-4', '5-9') = 'young children';
+      c('10-14', '15-19') = 'children and adolescents';
+      c('20-24', '25-34', '35-44', '45-54') = 'adults';
+      c('55-64', '65-74', '75-84') = 'older adults'
+    "                        
+                            )) %>% 
+  filter(!is.na(age_group)) %>% 
+  filter(age_group != "young children") %>% 
+  filter(cause %in% c("assault", "intentional_self_harm", "vehicle")) %>% 
+  mutate(rep = ifelse(year %in% c(2010:2014, 1994:2001, 1978:1981, 1968:1969), 1, 0)) %>% 
+  select(year, age_group, sex, race, cause, rep, death_count, population_count) %>% 
+  group_by(year, age_group, sex, race, cause, rep) %>% 
+  summarise(
+    death_count = sum(death_count), 
+    population_count = sum(population_count)        
+            ) %>% 
+  ungroup() %>% 
+  mutate(death_rate = 100000 * death_count / population_count) 
+
+write_csv(age_group_icd, path = "data/tidied/three_cause_agegrouped.csv")
+
+age_group_icd %>% 
+  filter(age_group == "adults") %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = death_rate, group = race, colour = race)) + 
+  facet_grid(sex ~ cause) + 
+  scale_y_log10() + 
+  labs(title = "Adults")
+ggsave("figures/three_cause_adults.png", dpi = 150, width = 20, height = 15, units = "cm")
+
+
+age_group_icd %>% 
+  filter(age_group == "children and adolescents") %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = death_rate, group = race, colour = race)) + 
+  facet_grid(sex ~ cause) + 
+  scale_y_log10() + 
+  labs(title = "Children and adolescents")
+ggsave("figures/three_cause_children.png", dpi = 150, width = 20, height = 15, units = "cm")
+
+age_group_icd %>% 
+  filter(age_group == "older adults") %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = death_rate, group = race, colour = race)) + 
+  facet_grid(sex ~ cause) + 
+  scale_y_log10() + 
+  labs(title = "older_adults")
+ggsave("figures/three_cause_older.png", dpi = 150, width = 20, height = 15, units = "cm")
+
+
+  
+#   Variable name: "rep" (1=Republican, 0=Democrat). This variable is lagged 1 year.
+# 
+# Republican years: 2010-2014, 1994-2001, 1978-1981, 1968-1969
+# All others are Democrats.
+# 
+# That will get us started.
+# 
+# Thanks!
+
 # dd at end works but ii doesn't, implying some non-integer values for death/population counts
 
 
