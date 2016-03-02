@@ -34,7 +34,10 @@ require(dplyr)
 require(stringr)
 require(car)
 
+require(xts)
+require(zoo)
 require(mFilter)
+
 
 require(ggplot2)
 require(lattice)
@@ -58,12 +61,12 @@ dta <- dta %>% filter(age_group != "older adults")
 #2010:2014 
 
 dta %>% mutate(
-  k1970 = ifelse(year < 1970, 0 , year), 
-  k1978 = ifelse(year < 1978, 0, year),
-  k1982 = ifelse(year < 1982, 0, year),
-  k1994 = ifelse(year < 1994, 0 , year), 
-  k2002 = ifelse(year < 2002, 0, year),
-  k2010 = ifelse(year < 2010, 0, year)
+  k1970 = ifelse( year > 1970, year - 1970, 0), 
+  k1978 = ifelse( year > 1978, year - 1978, 0),
+  k1982 = ifelse( year > 1982, year - 1982, 0),
+  k1994 = ifelse( year > 1994, year - 1994, 0), 
+  k2002 = ifelse( year > 2002, year - 2002, 0),
+  k2010 = ifelse( year > 2010, year - 2010, 0)
 ) %>% 
 filter(race %in% c("black", "white")) %>% 
 mutate(
@@ -179,7 +182,26 @@ ldply(both_stages, function(x) {x[["stage2"]][["fitted.values"]]}) %>%
 # Once you detrended y using HP, then run equation 3, where res_y will be the 
 # detrended values of y using HP, and plot the fitted values.
 
+# Need to first convert the data to a timeseries format
 
+# actually many separate time series, one for each age group, sex, race, and cause
+
+fn <- function(x){
+  y <- data.frame(year = as.Date(as.character(x$year), format = "%Y"), value = x$death_rate)
+  output <- xts(y$value, y$year)
+  return(output)
+}
+
+dta_list <- dlply(dta, .(age_group, sex, race, cause), fn)
+
+
+dta_list_detrended_100 <- llply(dta_list, hpfilter, freq = 100)
+dta_list_detrended_6_25 <- llply(dta_list, hpfilter, freq = 6.25)
+
+fn2 <- function(x){
+  output <- data.frame(cycle = x$cycle, trend = x$trend[,1])
+  return(output)
+}
 
 
 

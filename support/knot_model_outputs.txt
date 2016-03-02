@@ -1,216 +1,4 @@
-$black.female.assault
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.31173 -0.16120 -0.07395  0.22359  0.38042 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)
-(Intercept)  8.442e+00  1.439e+01   0.587    0.558
-year        -3.775e-03  7.308e-03  -0.517    0.606
-k1970        4.342e-05  5.233e-05   0.830    0.408
-k1978       -6.842e-06  4.374e-05  -0.156    0.876
-k1982       -7.706e-08  4.603e-05  -0.002    0.999
-k1994       -6.409e-05  4.573e-05  -1.401    0.163
-k2002       -6.768e-05  4.187e-05  -1.616    0.108
-k2010       -2.390e-05  4.163e-05  -0.574    0.567
-
-Residual standard error: 0.2112 on 133 degrees of freedom
-Multiple R-squared:  0.4058,	Adjusted R-squared:  0.3746 
-F-statistic: 12.98 on 7 and 133 DF,  p-value: 1.184e-12
-
-
-$black.female.intentional_self_harm
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.45084 -0.13388 -0.00384  0.18508  0.32750 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)
-(Intercept)  4.513e+00  1.398e+01   0.323    0.747
-year        -2.127e-03  7.103e-03  -0.299    0.765
-k1970        4.683e-05  5.086e-05   0.921    0.359
-k1978       -2.571e-05  4.251e-05  -0.605    0.546
-k1982       -9.560e-06  4.474e-05  -0.214    0.831
-k1994       -2.292e-05  4.445e-05  -0.516    0.607
-k2002       -1.501e-05  4.069e-05  -0.369    0.713
-k2010        5.713e-05  4.046e-05   1.412    0.160
-
-Residual standard error: 0.2052 on 133 degrees of freedom
-Multiple R-squared:  0.1056,	Adjusted R-squared:  0.0585 
-F-statistic: 2.243 on 7 and 133 DF,  p-value: 0.03456
-
-
-$black.female.vehicle
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.29249 -0.09765  0.04273  0.08615  0.20013 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)  
-(Intercept)  1.003e+01  7.957e+00   1.260   0.2098  
-year        -4.518e-03  4.042e-03  -1.118   0.2657  
-k1970       -4.859e-05  2.894e-05  -1.679   0.0956 .
-k1978       -3.677e-05  2.419e-05  -1.520   0.1309  
-k1982        2.185e-05  2.546e-05   0.858   0.3923  
-k1994        4.272e-05  2.530e-05   1.689   0.0936 .
-k2002       -1.383e-05  2.316e-05  -0.597   0.5515  
-k2010       -4.463e-05  2.303e-05  -1.938   0.0547 .
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.1168 on 133 degrees of freedom
-Multiple R-squared:  0.3169,	Adjusted R-squared:  0.281 
-F-statistic: 8.815 on 7 and 133 DF,  p-value: 6.98e-09
-
-
-$black.male.assault
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.46976 -0.26667 -0.01142  0.26997  0.41528 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)
-(Intercept)  4.482e+00  1.839e+01   0.244    0.808
-year        -1.398e-03  9.342e-03  -0.150    0.881
-k1970        2.212e-05  6.689e-05   0.331    0.741
-k1978       -2.403e-05  5.591e-05  -0.430    0.668
-k1982        1.101e-07  5.884e-05   0.002    0.999
-k1994       -6.038e-05  5.846e-05  -1.033    0.304
-k2002       -4.268e-05  5.352e-05  -0.798    0.427
-k2010       -1.945e-05  5.322e-05  -0.365    0.715
-
-Residual standard error: 0.2699 on 133 degrees of freedom
-Multiple R-squared:  0.1816,	Adjusted R-squared:  0.1386 
-F-statistic: 4.217 on 7 and 133 DF,  p-value: 0.0003133
-
-
-$black.male.intentional_self_harm
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.54480 -0.25365  0.07256  0.22034  0.35809 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)
-(Intercept) -8.725e+00  1.764e+01  -0.495    0.622
-year         4.852e-03  8.959e-03   0.542    0.589
-k1970        3.773e-05  6.415e-05   0.588    0.557
-k1978       -3.358e-07  5.362e-05  -0.006    0.995
-k1982        1.897e-05  5.643e-05   0.336    0.737
-k1994       -3.587e-05  5.606e-05  -0.640    0.523
-k2002       -6.554e-05  5.133e-05  -1.277    0.204
-k2010       -1.101e-05  5.104e-05  -0.216    0.830
-
-Residual standard error: 0.2589 on 133 degrees of freedom
-Multiple R-squared:  0.04877,	Adjusted R-squared:  -0.001295 
-F-statistic: 0.9741 on 7 and 133 DF,  p-value: 0.4528
-
-
-$black.male.vehicle
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.35759 -0.18727  0.08438  0.12860  0.21635 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)
-(Intercept)  1.482e+01  1.202e+01   1.233    0.220
-year        -6.662e-03  6.106e-03  -1.091    0.277
-k1970       -4.381e-05  4.372e-05  -1.002    0.318
-k1978       -3.143e-05  3.654e-05  -0.860    0.391
-k1982        2.327e-06  3.846e-05   0.061    0.952
-k1994        1.754e-05  3.821e-05   0.459    0.647
-k2002       -3.997e-06  3.498e-05  -0.114    0.909
-k2010       -2.923e-05  3.478e-05  -0.840    0.402
-
-Residual standard error: 0.1764 on 133 degrees of freedom
-Multiple R-squared:  0.3122,	Adjusted R-squared:  0.276 
-F-statistic: 8.626 on 7 and 133 DF,  p-value: 1.059e-08
-
-
-$white.female.assault
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.32465 -0.09561 -0.02843  0.14736  0.23834 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)  
-(Intercept)  6.750e+00  9.792e+00   0.689   0.4918  
-year        -3.305e-03  4.974e-03  -0.664   0.5076  
-k1970        8.179e-05  3.562e-05   2.296   0.0232 *
-k1978        4.258e-05  2.977e-05   1.430   0.1550  
-k1982       -3.468e-06  3.133e-05  -0.111   0.9120  
-k1994       -4.755e-05  3.113e-05  -1.528   0.1290  
-k2002       -4.750e-05  2.850e-05  -1.667   0.0979 .
-k2010       -1.518e-05  2.834e-05  -0.536   0.5931  
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.1437 on 133 degrees of freedom
-Multiple R-squared:  0.4037,	Adjusted R-squared:  0.3723 
-F-statistic: 12.86 on 7 and 133 DF,  p-value: 1.488e-12
-
-
-$white.female.intentional_self_harm
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--0.6430 -0.3128  0.1461  0.2182  0.3154 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)
-(Intercept)  5.184e-01  1.996e+01   0.026    0.979
-year         9.737e-05  1.014e-02   0.010    0.992
-k1970        2.534e-05  7.262e-05   0.349    0.728
-k1978       -1.563e-05  6.070e-05  -0.258    0.797
-k1982       -1.305e-05  6.388e-05  -0.204    0.838
-k1994       -4.202e-05  6.346e-05  -0.662    0.509
-k2002        2.485e-05  5.810e-05   0.428    0.670
-k2010        5.658e-05  5.777e-05   0.979    0.329
-
-Residual standard error: 0.293 on 133 degrees of freedom
-Multiple R-squared:  0.03154,	Adjusted R-squared:  -0.01944 
-F-statistic: 0.6187 on 7 and 133 DF,  p-value: 0.7397
-
-
-$white.female.vehicle
+$adults.black.female.assault
 
 Call:
 lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
@@ -218,27 +6,419 @@ lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 +
 
 Residuals:
       Min        1Q    Median        3Q       Max 
--0.143849 -0.040168  0.000939  0.054862  0.107918 
+-0.046449 -0.027103  0.000552  0.021181  0.061062 
 
 Coefficients:
               Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  1.474e+01  4.369e+00   3.374 0.000972 ***
-year        -6.872e-03  2.219e-03  -3.096 0.002389 ** 
-k1970       -1.162e-05  1.589e-05  -0.731 0.465817    
-k1978        1.263e-05  1.328e-05   0.951 0.343404    
-k1982        9.676e-06  1.398e-05   0.692 0.490022    
-k1994        2.479e-05  1.389e-05   1.785 0.076509 .  
-k2002        6.558e-07  1.272e-05   0.052 0.958944    
-k2010       -5.375e-05  1.264e-05  -4.251 3.98e-05 ***
+(Intercept) -6.218e+01  3.615e+01  -1.720 0.093385 .  
+year         3.228e-02  1.836e-02   1.759 0.086486 .  
+k1970       -4.346e-02  2.053e-02  -2.117 0.040718 *  
+k1978       -8.719e-03  9.018e-03  -0.967 0.339555    
+k1982        1.896e-02  7.492e-03   2.531 0.015529 *  
+k1994       -3.309e-02  4.315e-03  -7.667 2.65e-09 ***
+k2002        2.259e-02  5.489e-03   4.116 0.000193 ***
+k2010        5.118e-04  1.048e-02   0.049 0.961297    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.06413 on 133 degrees of freedom
-Multiple R-squared:  0.6492,	Adjusted R-squared:  0.6307 
-F-statistic: 35.16 on 7 and 133 DF,  p-value: < 2.2e-16
+Residual standard error: 0.03236 on 39 degrees of freedom
+Multiple R-squared:  0.9754,	Adjusted R-squared:  0.971 
+F-statistic: 221.3 on 7 and 39 DF,  p-value: < 2.2e-16
 
 
-$white.male.assault
+$adults.black.female.intentional_self_harm
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.091224 -0.020345  0.000157  0.018235  0.061370 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1.035e+02  3.695e+01  -2.802 0.007871 ** 
+year         5.290e-02  1.876e-02   2.820 0.007520 ** 
+k1970       -5.456e-02  2.099e-02  -2.600 0.013104 *  
+k1978       -3.287e-02  9.216e-03  -3.566 0.000977 ***
+k1982        2.908e-02  7.657e-03   3.798 0.000498 ***
+k1994       -4.352e-03  4.410e-03  -0.987 0.329803    
+k2002        1.569e-02  5.610e-03   2.797 0.007970 ** 
+k2010        7.278e-03  1.071e-02   0.680 0.500792    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03307 on 39 degrees of freedom
+Multiple R-squared:  0.9133,	Adjusted R-squared:  0.8977 
+F-statistic: 58.69 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.black.female.vehicle
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.067967 -0.021054 -0.001224  0.014339  0.068463 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)   
+(Intercept) -19.791607  34.819667  -0.568  0.57302   
+year          0.010662   0.017681   0.603  0.54998   
+k1970        -0.043139   0.019775  -2.181  0.03524 * 
+k1978         0.029202   0.008685   3.362  0.00174 **
+k1982         0.009614   0.007216   1.332  0.19048   
+k1994        -0.007436   0.004156  -1.789  0.08133 . 
+k2002        -0.015659   0.005286  -2.962  0.00518 **
+k2010         0.015920   0.010093   1.577  0.12279   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03117 on 39 degrees of freedom
+Multiple R-squared:  0.8997,	Adjusted R-squared:  0.8817 
+F-statistic: 49.98 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.black.male.assault
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.080719 -0.033668  0.007674  0.030663  0.070141 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -89.171008  47.607002  -1.873 0.068569 .  
+year          0.046366   0.024174   1.918 0.062451 .  
+k1970        -0.059978   0.027038  -2.218 0.032427 *  
+k1978        -0.007855   0.011875  -0.661 0.512187    
+k1982         0.020080   0.009866   2.035 0.048660 *  
+k1994        -0.023631   0.005682  -4.159 0.000170 ***
+k2002         0.026428   0.007228   3.657 0.000753 ***
+k2010        -0.010437   0.013799  -0.756 0.453980    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.04261 on 39 degrees of freedom
+Multiple R-squared:  0.9237,	Adjusted R-squared:  0.9101 
+F-statistic: 67.49 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.black.male.intentional_self_harm
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.053296 -0.007725 -0.002302  0.011147  0.031290 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -76.383956  18.480542  -4.133 0.000184 ***
+year          0.039383   0.009384   4.197 0.000151 ***
+k1970        -0.025996   0.010496  -2.477 0.017699 *  
+k1978        -0.032345   0.004610  -7.017 2.03e-08 ***
+k1982         0.022251   0.003830   5.810 9.51e-07 ***
+k1994        -0.020034   0.002206  -9.083 3.63e-11 ***
+k2002         0.017266   0.002806   6.154 3.17e-07 ***
+k2010         0.005092   0.005357   0.951 0.347656    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.01654 on 39 degrees of freedom
+Multiple R-squared:  0.9287,	Adjusted R-squared:  0.9159 
+F-statistic: 72.54 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.black.male.vehicle
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.056462 -0.024274 -0.000064  0.020878  0.056358 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept) 31.902682  33.777544   0.944  0.35073   
+year        -0.015269   0.017151  -0.890  0.37880   
+k1970       -0.009486   0.019184  -0.494  0.62375   
+k1978        0.017072   0.008425   2.026  0.04962 * 
+k1982       -0.001020   0.007000  -0.146  0.88486   
+k1994        0.012215   0.004032   3.030  0.00433 **
+k2002       -0.017852   0.005128  -3.481  0.00125 **
+k2010        0.009195   0.009791   0.939  0.35342   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03023 on 39 degrees of freedom
+Multiple R-squared:  0.952,	Adjusted R-squared:  0.9434 
+F-statistic: 110.5 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.white.female.assault
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.038763 -0.013325 -0.001488  0.010748  0.043426 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -70.081646  22.899237  -3.060  0.00399 ** 
+year          0.035824   0.011628   3.081  0.00377 ** 
+k1970        -0.023187   0.013005  -1.783  0.08239 .  
+k1978        -0.009979   0.005712  -1.747  0.08850 .  
+k1982        -0.007317   0.004746  -1.542  0.13119    
+k1994        -0.018047   0.002733  -6.603 7.55e-08 ***
+k2002         0.021065   0.003477   6.059 4.28e-07 ***
+k2010        -0.008644   0.006637  -1.302  0.20046    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0205 on 39 degrees of freedom
+Multiple R-squared:  0.9653,	Adjusted R-squared:  0.9591 
+F-statistic: 154.9 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.white.female.intentional_self_harm
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+-0.0288561 -0.0077466  0.0005336  0.0065125  0.0207046 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -4.943e+01  1.323e+01  -3.737 0.000596 ***
+year         2.562e-02  6.717e-03   3.814 0.000475 ***
+k1970       -3.210e-02  7.513e-03  -4.272 0.000120 ***
+k1978       -1.647e-02  3.300e-03  -4.993 1.28e-05 ***
+k1982        1.375e-02  2.741e-03   5.016 1.19e-05 ***
+k1994        1.872e-02  1.579e-03  11.854 1.68e-14 ***
+k2002        4.448e-03  2.008e-03   2.215 0.032694 *  
+k2010       -6.481e-04  3.834e-03  -0.169 0.866641    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.01184 on 39 degrees of freedom
+Multiple R-squared:  0.9823,	Adjusted R-squared:  0.9791 
+F-statistic: 308.4 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.white.female.vehicle
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.082242 -0.014507  0.001042  0.020232  0.040113 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 17.470114  33.033418   0.529  0.59990    
+year        -0.008290   0.016774  -0.494  0.62393    
+k1970       -0.002041   0.018761  -0.109  0.91395    
+k1978        0.015609   0.008240   1.894  0.06561 .  
+k1982       -0.013136   0.006846  -1.919  0.06235 .  
+k1994        0.012692   0.003943   3.219  0.00259 ** 
+k2002       -0.017991   0.005015  -3.587  0.00092 ***
+k2010        0.003973   0.009575   0.415  0.68049    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02957 on 39 degrees of freedom
+Multiple R-squared:  0.8629,	Adjusted R-squared:  0.8383 
+F-statistic: 35.08 on 7 and 39 DF,  p-value: 6.515e-15
+
+
+$adults.white.male.assault
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.103333 -0.022348  0.007069  0.020808  0.067021 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -7.639e+01  4.084e+01  -1.871   0.0689 .  
+year         3.931e-02  2.074e-02   1.896   0.0654 .  
+k1970       -2.426e-02  2.319e-02  -1.046   0.3020    
+k1978       -2.227e-02  1.019e-02  -2.186   0.0349 *  
+k1982        6.334e-04  8.463e-03   0.075   0.9407    
+k1994       -4.080e-02  4.874e-03  -8.371 3.05e-10 ***
+k2002        5.043e-02  6.200e-03   8.134 6.27e-10 ***
+k2010       -1.263e-02  1.184e-02  -1.067   0.2924    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03655 on 39 degrees of freedom
+Multiple R-squared:  0.9695,	Adjusted R-squared:  0.964 
+F-statistic:   177 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.white.male.intentional_self_harm
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+-0.0208752 -0.0049554 -0.0004666  0.0048918  0.0235638 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -26.655352  11.787063  -2.261   0.0294 *  
+year          0.014222   0.005985   2.376   0.0225 *  
+k1970        -0.008063   0.006694  -1.205   0.2357    
+k1978        -0.007863   0.002940  -2.674   0.0109 *  
+k1982         0.001235   0.002443   0.505   0.6161    
+k1994         0.002154   0.001407   1.531   0.1337    
+k2002         0.010038   0.001789   5.609 1.81e-06 ***
+k2010        -0.007901   0.003417  -2.312   0.0261 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.01055 on 39 degrees of freedom
+Multiple R-squared:  0.9539,	Adjusted R-squared:  0.9457 
+F-statistic: 115.4 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$adults.white.male.vehicle
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.050747 -0.018551  0.002508  0.017046  0.044910 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 48.839511  32.682372   1.494  0.14313    
+year        -0.023955   0.016595  -1.443  0.15688    
+k1970        0.017611   0.018562   0.949  0.34857    
+k1978        0.006451   0.008152   0.791  0.43357    
+k1982       -0.017649   0.006773  -2.606  0.01291 *  
+k1994        0.025259   0.003901   6.475 1.13e-07 ***
+k2002       -0.015568   0.004962  -3.138  0.00324 ** 
+k2010       -0.006480   0.009473  -0.684  0.49799    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02925 on 39 degrees of freedom
+Multiple R-squared:  0.9367,	Adjusted R-squared:  0.9254 
+F-statistic: 82.47 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.black.female.assault`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.090920 -0.020435  0.000687  0.022803  0.071435 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1.555e+02  4.949e+01  -3.142  0.00320 ** 
+year         7.939e-02  2.513e-02   3.159  0.00305 ** 
+k1970       -7.686e-02  2.811e-02  -2.734  0.00935 ** 
+k1978       -2.542e-02  1.235e-02  -2.059  0.04621 *  
+k1982        4.060e-02  1.026e-02   3.958  0.00031 ***
+k1994       -6.847e-02  5.907e-03 -11.592 3.32e-14 ***
+k2002        5.634e-02  7.514e-03   7.498 4.49e-09 ***
+k2010       -4.524e-02  1.435e-02  -3.154  0.00310 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.0443 on 39 degrees of freedom
+Multiple R-squared:  0.9192,	Adjusted R-squared:  0.9047 
+F-statistic: 63.38 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.black.female.intentional_self_harm`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.172186 -0.066852  0.008072  0.049281  0.197290 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)   
+(Intercept) -2.177e+02  1.045e+02  -2.082  0.04391 * 
+year         1.106e-01  5.308e-02   2.084  0.04377 * 
+k1970       -1.374e-01  5.937e-02  -2.313  0.02606 * 
+k1978        3.249e-02  2.608e-02   1.246  0.22023   
+k1982        1.815e-03  2.167e-02   0.084  0.93365   
+k1994       -3.270e-02  1.248e-02  -2.621  0.01245 * 
+k2002        4.952e-02  1.587e-02   3.120  0.00339 **
+k2010        3.912e-03  3.030e-02   0.129  0.89794   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.09357 on 39 degrees of freedom
+Multiple R-squared:  0.4114,	Adjusted R-squared:  0.3057 
+F-statistic: 3.894 on 7 and 39 DF,  p-value: 0.002632
+
+
+$`children and adolescents.black.female.vehicle`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.105384 -0.030351 -0.000857  0.030761  0.093758 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept) 25.948761  53.446890   0.486  0.63003   
+year        -0.012690   0.027139  -0.468  0.64267   
+k1970       -0.012914   0.030355  -0.425  0.67285   
+k1978        0.019786   0.013332   1.484  0.14581   
+k1982        0.015385   0.011076   1.389  0.17271   
+k1994       -0.006148   0.006379  -0.964  0.34112   
+k2002       -0.028093   0.008114  -3.462  0.00131 **
+k2010        0.014483   0.015492   0.935  0.35561   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.04784 on 39 degrees of freedom
+Multiple R-squared:  0.7805,	Adjusted R-squared:  0.7412 
+F-statistic: 19.82 on 7 and 39 DF,  p-value: 4.993e-11
+
+
+$`children and adolescents.black.male.assault`
 
 Call:
 lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
@@ -246,77 +426,245 @@ lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 +
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--0.43313 -0.16340 -0.02347  0.21013  0.35017 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)  
-(Intercept)  1.054e+01  1.382e+01   0.763   0.4469  
-year        -4.994e-03  7.022e-03  -0.711   0.4782  
-k1970        7.875e-05  5.028e-05   1.566   0.1196  
-k1978        5.821e-05  4.203e-05   1.385   0.1683  
-k1982       -1.547e-05  4.423e-05  -0.350   0.7270  
-k1994       -5.815e-05  4.394e-05  -1.323   0.1880  
-k2002       -8.694e-05  4.023e-05  -2.161   0.0325 *
-k2010       -1.578e-05  4.000e-05  -0.395   0.6938  
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.2029 on 133 degrees of freedom
-Multiple R-squared:  0.4444,	Adjusted R-squared:  0.4152 
-F-statistic:  15.2 on 7 and 133 DF,  p-value: 1.69e-14
-
-
-$white.male.intentional_self_harm
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--0.5440 -0.3180  0.1300  0.2022  0.3882 
-
-Coefficients:
-              Estimate Std. Error t value Pr(>|t|)
-(Intercept) -4.401e+00  1.878e+01  -0.234    0.815
-year         2.842e-03  9.543e-03   0.298    0.766
-k1970        2.068e-05  6.833e-05   0.303    0.763
-k1978        2.913e-06  5.712e-05   0.051    0.959
-k1982        1.203e-05  6.011e-05   0.200    0.842
-k1994       -3.421e-05  5.972e-05  -0.573    0.568
-k2002       -1.332e-05  5.467e-05  -0.244    0.808
-k2010        2.422e-05  5.436e-05   0.446    0.657
-
-Residual standard error: 0.2757 on 133 degrees of freedom
-Multiple R-squared:  0.0178,	Adjusted R-squared:  -0.0339 
-F-statistic: 0.3443 on 7 and 133 DF,  p-value: 0.932
-
-
-$white.male.vehicle
-
-Call:
-lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
-    k2002 + k2010, data = x)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.23080 -0.04213  0.01336  0.05409  0.11834 
+-0.10769 -0.03848  0.00261  0.03932  0.11000 
 
 Coefficients:
               Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  2.018e+01  5.030e+00   4.012    1e-04 ***
-year        -9.416e-03  2.555e-03  -3.685 0.000332 ***
-k1970       -7.468e-06  1.830e-05  -0.408 0.683831    
-k1978        2.019e-05  1.529e-05   1.320 0.189111    
-k1982       -1.729e-05  1.610e-05  -1.074 0.284545    
-k1994        1.006e-05  1.599e-05   0.629 0.530424    
-k2002        3.069e-05  1.464e-05   2.096 0.037954 *  
-k2010       -3.066e-05  1.456e-05  -2.106 0.037050 *  
+(Intercept) -99.552892  60.254125  -1.652  0.10652    
+year          0.051303   0.030596   1.677  0.10158    
+k1970        -0.068743   0.034221  -2.009  0.05152 .  
+k1978         0.015132   0.015030   1.007  0.32025    
+k1982         0.043400   0.012487   3.476  0.00127 ** 
+k1994        -0.095857   0.007192 -13.329 4.19e-16 ***
+k2002         0.067821   0.009148   7.414 5.83e-09 ***
+k2010        -0.046247   0.017465  -2.648  0.01163 *  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.07384 on 133 degrees of freedom
-Multiple R-squared:  0.7103,	Adjusted R-squared:  0.6951 
-F-statistic: 46.59 on 7 and 133 DF,  p-value: < 2.2e-16
+Residual standard error: 0.05393 on 39 degrees of freedom
+Multiple R-squared:  0.8776,	Adjusted R-squared:  0.8557 
+F-statistic: 39.96 on 7 and 39 DF,  p-value: 7.42e-16
 
 
+$`children and adolescents.black.male.intentional_self_harm`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.069599 -0.015673 -0.001631  0.012608  0.121756 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1.691e+02  4.243e+01  -3.984 0.000287 ***
+year         8.604e-02  2.155e-02   3.993 0.000279 ***
+k1970       -7.408e-02  2.410e-02  -3.074 0.003845 ** 
+k1978       -9.650e-03  1.058e-02  -0.912 0.367483    
+k1982        3.112e-02  8.793e-03   3.539 0.001058 ** 
+k1994       -7.355e-02  5.064e-03 -14.523  < 2e-16 ***
+k2002        4.468e-02  6.442e-03   6.936 2.63e-08 ***
+k2010       -1.455e-03  1.230e-02  -0.118 0.906432    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03798 on 39 degrees of freedom
+Multiple R-squared:  0.9473,	Adjusted R-squared:  0.9379 
+F-statistic: 100.2 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.black.male.vehicle`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.074316 -0.024084  0.001058  0.026077  0.069758 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 63.986086  38.594614   1.658 0.105361    
+year        -0.031767   0.019597  -1.621 0.113080    
+k1970        0.008964   0.021919   0.409 0.684803    
+k1978        0.008036   0.009627   0.835 0.408954    
+k1982        0.023373   0.007998   2.922 0.005756 ** 
+k1994       -0.018395   0.004606  -3.993 0.000279 ***
+k2002       -0.015316   0.005859  -2.614 0.012656 *  
+k2010        0.016289   0.011187   1.456 0.153373    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03454 on 39 degrees of freedom
+Multiple R-squared:  0.9352,	Adjusted R-squared:  0.9236 
+F-statistic: 80.42 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.white.female.assault`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.091314 -0.022881  0.002248  0.022733  0.066513 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1.380e+02  4.486e+01  -3.077 0.003818 ** 
+year         7.013e-02  2.278e-02   3.079 0.003795 ** 
+k1970       -4.080e-02  2.548e-02  -1.601 0.117339    
+k1978       -4.293e-02  1.119e-02  -3.836 0.000446 ***
+k1982        1.604e-02  9.297e-03   1.726 0.092335 .  
+k1994       -4.322e-02  5.354e-03  -8.073 7.58e-10 ***
+k2002        3.220e-02  6.811e-03   4.728 2.94e-05 ***
+k2010       -3.271e-02  1.300e-02  -2.515 0.016116 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.04015 on 39 degrees of freedom
+Multiple R-squared:  0.956,	Adjusted R-squared:  0.9481 
+F-statistic: 121.1 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.white.female.intentional_self_harm`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.067045 -0.016117 -0.003171  0.018555  0.129878 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1.131e+02  4.423e+01  -2.558 0.014526 *  
+year         5.753e-02  2.246e-02   2.562 0.014398 *  
+k1970       -4.539e-02  2.512e-02  -1.807 0.078499 .  
+k1978        6.844e-03  1.103e-02   0.620 0.538622    
+k1982       -1.756e-02  9.166e-03  -1.916 0.062695 .  
+k1994       -2.067e-02  5.279e-03  -3.915 0.000352 ***
+k2002        3.330e-02  6.715e-03   4.959 1.42e-05 ***
+k2010        3.132e-02  1.282e-02   2.443 0.019207 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03959 on 39 degrees of freedom
+Multiple R-squared:  0.8366,	Adjusted R-squared:  0.8073 
+F-statistic: 28.53 on 7 and 39 DF,  p-value: 1.863e-13
+
+
+$`children and adolescents.white.female.vehicle`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.068489 -0.013148  0.000364  0.016349  0.072017 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  8.4401813 39.0420342   0.216   0.8300    
+year        -0.0036889  0.0198246  -0.186   0.8533    
+k1970        0.0067537  0.0221735   0.305   0.7623    
+k1978       -0.0082155  0.0097385  -0.844   0.4040    
+k1982       -0.0009754  0.0080910  -0.121   0.9047    
+k1994        0.0097612  0.0046599   2.095   0.0427 *  
+k2002       -0.0321148  0.0059273  -5.418 3.32e-06 ***
+k2010       -0.0169972  0.0113165  -1.502   0.1412    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03495 on 39 degrees of freedom
+Multiple R-squared:  0.9299,	Adjusted R-squared:  0.9173 
+F-statistic: 73.93 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.white.male.assault`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.143834 -0.033582  0.006811  0.037081  0.128443 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -55.66873   73.64277  -0.756 0.454233    
+year          0.02848    0.03739   0.762 0.450918    
+k1970         0.01328    0.04183   0.318 0.752527    
+k1978        -0.07682    0.01837  -4.182 0.000158 ***
+k1982         0.06049    0.01526   3.964 0.000305 ***
+k1994        -0.10295    0.00879 -11.712 2.42e-14 ***
+k2002         0.06926    0.01118   6.195 2.78e-07 ***
+k2010        -0.02397    0.02135  -1.123 0.268227    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.06591 on 39 degrees of freedom
+Multiple R-squared:  0.9369,	Adjusted R-squared:  0.9256 
+F-statistic: 82.71 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.white.male.intentional_self_harm`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.050345 -0.017057  0.000123  0.014276  0.052836 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -66.904215  28.356548  -2.359   0.0234 *  
+year          0.034324   0.014399   2.384   0.0221 *  
+k1970        -0.009330   0.016105  -0.579   0.5657    
+k1978        -0.010369   0.007073  -1.466   0.1507    
+k1982        -0.009872   0.005877  -1.680   0.1010    
+k1994        -0.022460   0.003385  -6.636 6.79e-08 ***
+k2002         0.020395   0.004305   4.737 2.86e-05 ***
+k2010         0.021819   0.008219   2.655   0.0114 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.02538 on 39 degrees of freedom
+Multiple R-squared:  0.9409,	Adjusted R-squared:  0.9303 
+F-statistic: 88.73 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$`children and adolescents.white.male.vehicle`
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.053934 -0.022978 -0.003619  0.022719  0.066444 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 10.0267920 36.5551020   0.274    0.785    
+year        -0.0042866  0.0185618  -0.231    0.819    
+k1970        0.0078817  0.0207610   0.380    0.706    
+k1978       -0.0153652  0.0091182  -1.685    0.100 .  
+k1982       -0.0060738  0.0075756  -0.802    0.428    
+k1994        0.0205311  0.0043630   4.706 3.16e-05 ***
+k2002       -0.0333725  0.0055497  -6.013 4.96e-07 ***
+k2010       -0.0007997  0.0105956  -0.075    0.940    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03272 on 39 degrees of freedom
+Multiple R-squared:  0.971,	Adjusted R-squared:  0.9658 
+F-statistic: 186.7 on 7 and 39 DF,  p-value: < 2.2e-16

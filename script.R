@@ -108,6 +108,83 @@ age_group_icd %>%
 ggsave("figures/three_cause_older.png", dpi = 150, width = 20, height = 15, units = "cm")
 
 
+# General comments:
+# #   
+# #   * Data for older adults are noisy and the trends seem 
+# uninteresting for our purposes. Let's make them aside for now...
+# # 
+# # * Suicides data for females, in general, are also noisy, 
+# adults being for the most part the exception.
+# # 
+# # * Trends seem to suggest that, to some degree, homicides 
+# and suicides belong to different processes -- the trends are 
+# somewhat different by race-sex and age-group combinations.  
+# So let's keep an eye on this -- if we were thinking about 
+# bringing them together under the single umbrella of gun 
+# control policies and the respective issue-positions of 
+# the parties, I think that's not going to be easy.
+# # 
+# # * The data for homicides, especially for black male and female adults, 
+# seem to oscillate with the party of the president.  However, the trends 
+# oscillate in such a manner that detrending the series is not obvious 
+# -- I can anticipate a lot of variation from one method to another. 
+# At first sight, interestingly, the relationship seems to be against 
+# Democrats before Reagan and against Republicans once Reagan 
+# got in office (?).  This means that, whatever is influencing black 
+# adults' homicides, is split in two historical trends.  This means 
+# we will need not one but two theoretical frameworks -- complicated.
+# # 
+# # * Needless to say -- the Reagan and Bush's administrations were disastrous.
+# 
+# * Jon, for now, let's focus on black and white male adults.  
+# To keep things simple, let's run two quick exercises. Please:
+# 
+# Exercise 1:
+# 
+# Let's separate the linear trends by presidential regime. 
+# This can be done running a model using linear splines with knots at the year 
+# when there was a change of president.  In our case, the knots are the first 
+# year for each Republican president.  The model looks like this:
+#   
+#   y = a + b1*t + b2*(t-y1)*D1 + b3*(t-y2)*D2 + b4*(t-y3)*D3... + e    [1]
+# 
+# where y1 is the year of the first knot (say, 1970) and D1 is  a 
+# dummy equal to "1" if t is greater or equal to 1970, and "0" otherwise; 
+# y2 is the year of the second knot (1977) and D2 a dummy 
+# (1=greater or equal to 1977, 0=otherwise), and so on.  To simplify things 
+# you can create a variable for each term (t-y_)*D_  where each of 
+# them equals "0" before the knot and equal to "t" at and after the knot. 
+# So, for example, for the term (t-y1)*D1, X1 will be equal to "0" for years 
+# 1968-1969 and equal to 1970, 1971, 1972, 1973... (at and after the knot) --
+#   the same for the other terms.
+# 
+# # From this regression (run for each race-sex (4), age-group (adults), 
+# and mortality cause (3) -- for a total of 12 regressions), recover the fitted values, 
+# and plot them using scatter and the fitted line.  Estimate the model using OLS. 
+# The models will simply let us know if the linear trends are at least in the 
+# right direction or if there is a patterns in the trends...
+# 
+# Exercise 2:
+#   
+#   Those trends are bumpy.  But to run at least a first approximation, let's do two detrending exercises.
+# 
+# 
+# E1. Let's generate a 6th order polynomial function of time.  Create 6 variables, where t1=year-1968, t2=t1^2, t3=t1^3... t6=t1^6.  Then run the following model:
+#   
+#   y = a + b1*t + b2*t2 +... b6*t6 + e     [2]
+# 
+# recover the residuals of y (again, for each race-sex (4), age-group (adults), and mortality cause (3)). Then run this regression:
+#   
+#   res_y = a + b1*rep + e     [3]
+# 
+# where rep is the Republican dummy.  Recover the fitted values and plot them.
+# 
+# 
+# E2. Detrend y using the Hodrick-Prescott (HP) filter (there should be a R package that does that). There are two conventional values for the smoothing parameter  for annual data: 6.25 and 100. Please use both since they usually do vary the detrending a lot.  Once you detrended y using HP, then run equation 3, where res_y will be the detrended values of y using HP, and plot the fitted values.
+# 
+# NOTE: We are, for now, not worrying about statistical significance. All of the above equations, therefore, do not correct the SEs and they can be estimated using OLS.  We just care for the fitted values... 
+# 
+# Thanks a lot.
   
 #   Variable name: "rep" (1=Republican, 0=Democrat). This variable is lagged 1 year.
 # 
