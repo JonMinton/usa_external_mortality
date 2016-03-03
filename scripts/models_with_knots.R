@@ -176,6 +176,8 @@ ldply(both_stages, function(x) {x[["stage2"]][["fitted.values"]]}) %>%
   labs(title = "children and adolescents")
 
 
+
+
 # E2. Detrend y using the Hodrick-Prescott (HP) filter (there should be a R package that does that). 
 # There are two conventional values for the smoothing parameter  for annual data: 6.25 and 100. 
 # Please use both since they usually do vary the detrending a lot.  
@@ -192,16 +194,42 @@ fn <- function(x){
   return(output)
 }
 
-dta_list <- dlply(dta, .(age_group, sex, race, cause), fn)
+dta_list <- dta %>% filter(race %in% c("black", "white")) %>% 
+  mutate(death_rate = log(death_rate, 10)) %>% 
+  dlply(., .(age_group, sex, race, cause), fn)
 
 
 dta_list_detrended_100 <- llply(dta_list, hpfilter, freq = 100)
 dta_list_detrended_6_25 <- llply(dta_list, hpfilter, freq = 6.25)
 
 fn2 <- function(x){
-  output <- data.frame(cycle = x$cycle, trend = x$trend[,1])
+  year <- dimnames(x$trend)[1][[1]]  %>% str_replace_all(., "-03-03", "")  %>% as.numeric()
+  output <- data.frame(year = year, cycle = x$cycle, trend = x$trend[,1])
   return(output)
 }
 
+dta_df_detrended_100 <- ldply(dta_list_detrended_100, fn2)
+dta_df_detrended_100 <- dta_df_detrended_100 %>% separate(.id, "\\.", into = c("age_group", "sex", "race", "cause")) %>% tbl_df
 
 
+dta_df_detrended_6_25 <- ldply(dta_list_detrended_6_25, fn2)
+dta_df_detrended_6_25 <- dta_df_detrended_6_25 %>% separate(.id, "\\.", into = c("age_group", "sex", "race", "cause")) %>% tbl_df
+
+dta_df_detrended_100 <- dta  %>% select(year, rep)  %>% right_join(dta_df_detrended_100) %>% distinct
+
+dta_df_detrended_6_25 <- dta  %>% select(year, rep)  %>% right_join(dta_df_detrended_6_25) %>% distinct
+
+write_csv(x = dta_df_detrended_100, path = "data/filtered/detrended_100.csv")
+write_csv(x = dta_df_detrended_6_25, path = "data/filtered/detrended_6_25.csv")
+
+
+dta_df_detrended_100 %>% filter(age_group == "adults") %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = cycle, group = cause, colour = cause)) + 
+  facet_grid( sex ~ race) 
+
+
+dta_df_detrended_6_25 %>% filter(age_group == "adults") %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = cycle, group = cause, colour = cause)) + 
+  facet_grid( sex ~ race) 
