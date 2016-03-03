@@ -233,3 +233,58 @@ dta_df_detrended_6_25 %>% filter(age_group == "adults") %>%
   ggplot(.) + 
   geom_line(aes(x = year, y = cycle, group = cause, colour = cause)) + 
   facet_grid( sex ~ race) 
+
+
+mdl_hp_100 <- dlply(dta_df_detrended_100, .(age_group, sex, race, cause), function(x){lm(cycle ~ rep, data = x)})
+mdl_hp_6_25 <- dlply(dta_df_detrended_6_25, .(age_group, sex, race, cause), function(x) {lm(cycle ~ rep, data = x)})
+
+write_pdf <- function(x){
+  nms <- x
+  dta <- mdl_hp_100[[nms]]
+  
+  pdf(
+    file = paste0("figures/diagnostic/hp/100/", nms, ".pdf"),
+    width = 10, height = 10
+  )
+  
+  par(mfrow = c(2,2))
+  
+  plot(dta)
+  
+  dev.off()
+  
+}
+
+l_ply(names(mdl_hp_100), write_pdf)
+
+write_pdf <- function(x){
+  nms <- x
+  dta <- mdl_hp_6_25[[nms]]
+  
+  pdf(
+    file = paste0("figures/diagnostic/hp/6_25/", nms, ".pdf"),
+    width = 10, height = 10
+  )
+  
+  par(mfrow = c(2,2))
+  
+  plot(dta)
+  
+  dev.off()
+  
+}
+
+l_ply(names(mdl_hp_6_25), write_pdf)
+
+
+# display model summaries too 
+
+sink(file = "support/hp_100_outputs.txt", split = T)
+llply(mdl_hp_100, summary)
+sink()
+
+sink(file = "support/hp_6_25_outputs.txt", split = T)
+llply(mdl_hp_6_25, summary)
+sink()
+
+                 
