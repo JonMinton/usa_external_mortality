@@ -1,28 +1,5 @@
-
-# Exercise 1:
-
-# Let's separate the linear trends by presidential regime. 
-# This can be done running a model using linear splines with knots at the year 
-# when there was a change of president.  In our case, the knots are the first 
-# year for each Republican president.  The model looks like this:
-# 
-# >   y = a + b1*t + b2*(t-y1)*D1 + b3*(t-y2)*D2 + b4*(t-y3)*D3... + e    [1]
-# 
-# where y1 is the year of the first knot (say, 1970) and D1 is  a 
-# dummy equal to "1" if t is greater or equal to 1970, and "0" otherwise; 
-# y2 is the year of the second knot (1977) and D2 a dummy 
-# (1=greater or equal to 1977, 0=otherwise), and so on.  To simplify things 
-# you can create a variable for each term (t-y_)*D_  where each of 
-# them equals "0" before the knot and equal to "t" at and after the knot. 
-# So, for example, for the term (t-y1)*D1, X1 will be equal to "0" for years 
-# 1968-1969 and equal to 1970, 1971, 1972, 1973... (at and after the knot) --
-# the same for the other terms.
-# 
-# From this regression (run for each race-sex (4), age-group (adults), 
-# and mortality cause (3) -- for a total of 12 regressions), recover the fitted values, 
-# and plot them using scatter and the fitted line.  Estimate the model using OLS. 
-# The models will simply let us know if the linear trends are at least in the 
-# right direction or if there is a patterns in the trends...
+# Analyses of ICD-8, ICD-9 and ICD-10 data for black and white populations, multiple age groups 
+# to assess the influence (or otherwise) of party in power on mortality trends 
 
 
 rm(list=ls())
@@ -53,6 +30,31 @@ dta <- read_csv("data/tidied/three_cause_agegrouped.csv")
 
 dta <- dta %>% filter(age_group != "older adults")
 
+
+# Exercise 1 --------------------------------------------------------------
+
+# Let's separate the linear trends by presidential regime. 
+# This can be done running a model using linear splines with knots at the year 
+# when there was a change of president.  In our case, the knots are the first 
+# year for each Republican president.  The model looks like this:
+# 
+# >   y = a + b1*t + b2*(t-y1)*D1 + b3*(t-y2)*D2 + b4*(t-y3)*D3... + e    [1]
+# 
+# where y1 is the year of the first knot (say, 1970) and D1 is  a 
+# dummy equal to "1" if t is greater or equal to 1970, and "0" otherwise; 
+# y2 is the year of the second knot (1977) and D2 a dummy 
+# (1=greater or equal to 1977, 0=otherwise), and so on.  To simplify things 
+# you can create a variable for each term (t-y_)*D_  where each of 
+# them equals "0" before the knot and equal to "t" at and after the knot. 
+# So, for example, for the term (t-y1)*D1, X1 will be equal to "0" for years 
+# 1968-1969 and equal to 1970, 1971, 1972, 1973... (at and after the knot) --
+# the same for the other terms.
+# 
+# From this regression (run for each race-sex (4), age-group (adults), 
+# and mortality cause (3) -- for a total of 12 regressions), recover the fitted values, 
+# and plot them using scatter and the fitted line.  Estimate the model using OLS. 
+# The models will simply let us know if the linear trends are at least in the 
+# right direction or if there is a patterns in the trends...
 # knots: 1970 1978 1982 1994 2002 2010
 #mutate(rep = ifelse(year %in% c(, , , ), 1, 0)) %>% 
 #1968:1969  -> 1970
@@ -73,8 +75,12 @@ mutate(
 lg10mr = log(death_rate, 10) 
 ) -> knotted 
 
-models <- dlply(knotted, .(age_group, race, sex, cause), 
-function(x) lm(lg10mr ~ year + k1970 + k1978 + k1982 + k1994+ k2002+ k2010, data = x))
+
+models <- dlply(
+  knotted, 
+  .(age_group, race, sex, cause), 
+  function(x) lm(lg10mr ~ year + k1970 + k1978 + k1982 + k1994+ k2002+ k2010, data = x)
+  )
 
 # to summarise all
 
@@ -104,7 +110,9 @@ nms <- names(models)
 l_ply(nms, write_pdf)
 
 
-# Exercise 2
+
+
+# Exercise 2 --------------------------------------------------------------
 
 # Those trends are bumpy.  But to run at least a first approximation, let's do two detrending exercises.
 # 
@@ -130,8 +138,11 @@ dta %>%
     lg10mr = log(death_rate, 10) 
   ) -> dta2 
 
-models_poly <- dlply(dta2, .(age_group, race, sex, cause), 
-                function(x) lm(lg10mr ~ poly(year, 6), data = x))
+models_poly <- dlply(
+  dta2, 
+  .(age_group, race, sex, cause), 
+  function(x) lm(lg10mr ~ poly(year, 6), data = x)
+  )
 
 llply(models_poly, summary)
 
@@ -143,7 +154,7 @@ do_both_stages <- function(x){
   
   df <- data.frame(res_y = residuals, rep = x$rep)
   
-  stage2 <- lm(res_y ~ rep, data =df)
+  stage2 <- lm(res_y ~ rep, data = df)
   
   output <- list(stage1 = stage1, stage2 = stage2)
 }
@@ -178,6 +189,8 @@ ldply(both_stages, function(x) {x[["stage2"]][["fitted.values"]]}) %>%
 
 
 
+# Exercise 2.2 ------------------------------------------------------------
+
 # E2. Detrend y using the Hodrick-Prescott (HP) filter (there should be a R package that does that). 
 # There are two conventional values for the smoothing parameter  for annual data: 6.25 and 100. 
 # Please use both since they usually do vary the detrending a lot.  
@@ -203,21 +216,33 @@ dta_list_detrended_100 <- llply(dta_list, hpfilter, freq = 100)
 dta_list_detrended_6_25 <- llply(dta_list, hpfilter, freq = 6.25)
 
 fn2 <- function(x){
-  year <- dimnames(x$trend)[1][[1]]  %>% str_replace_all(., "-03-03", "")  %>% as.numeric()
+  year <- dimnames(x$trend)[1][[1]]  %>% str_replace_all(., "-03-13", "")  %>% as.numeric()
   output <- data.frame(year = year, cycle = x$cycle, trend = x$trend[,1])
   return(output)
 }
 
-dta_df_detrended_100 <- ldply(dta_list_detrended_100, fn2)
-dta_df_detrended_100 <- dta_df_detrended_100 %>% separate(.id, "\\.", into = c("age_group", "sex", "race", "cause")) %>% tbl_df
+dta_df_detrended_100 <- ldply(dta_list_detrended_100, fn2) %>% tbl_df
+dta_df_detrended_100 <- dta_df_detrended_100 %>% 
+  separate(.id, "\\.", into = c("age_group", "sex", "race", "cause")) %>% 
+  tbl_df
 
 
 dta_df_detrended_6_25 <- ldply(dta_list_detrended_6_25, fn2)
-dta_df_detrended_6_25 <- dta_df_detrended_6_25 %>% separate(.id, "\\.", into = c("age_group", "sex", "race", "cause")) %>% tbl_df
+dta_df_detrended_6_25 <- dta_df_detrended_6_25 %>% 
+  separate(.id, "\\.", into = c("age_group", "sex", "race", "cause")) %>% 
+  tbl_df
 
-dta_df_detrended_100 <- dta  %>% select(year, rep)  %>% right_join(dta_df_detrended_100) %>% distinct
 
-dta_df_detrended_6_25 <- dta  %>% select(year, rep)  %>% right_join(dta_df_detrended_6_25) %>% distinct
+
+dta_df_detrended_100 <- dta  %>% 
+  select(year, rep)  %>% 
+  right_join(dta_df_detrended_100) %>% 
+  distinct
+
+dta_df_detrended_6_25 <- dta  %>% 
+  select(year, rep)  %>% 
+  right_join(dta_df_detrended_6_25) %>% 
+  distinct
 
 write_csv(x = dta_df_detrended_100, path = "data/filtered/detrended_100.csv")
 write_csv(x = dta_df_detrended_6_25, path = "data/filtered/detrended_6_25.csv")
@@ -235,8 +260,15 @@ dta_df_detrended_6_25 %>% filter(age_group == "adults") %>%
   facet_grid( sex ~ race) 
 
 
-mdl_hp_100 <- dlply(dta_df_detrended_100, .(age_group, sex, race, cause), function(x){lm(cycle ~ rep, data = x)})
-mdl_hp_6_25 <- dlply(dta_df_detrended_6_25, .(age_group, sex, race, cause), function(x) {lm(cycle ~ rep, data = x)})
+mdl_hp_100 <- dlply(dta_df_detrended_100, 
+                    .(age_group, sex, race, cause), 
+                    function(x){lm(cycle ~ rep, data = x)}
+                    )
+
+mdl_hp_6_25 <- dlply(dta_df_detrended_6_25, 
+                     .(age_group, sex, race, cause), 
+                     function(x) {lm(cycle ~ rep, data = x)}
+                     )
 
 write_pdf <- function(x){
   nms <- x
@@ -248,9 +280,7 @@ write_pdf <- function(x){
   )
   
   par(mfrow = c(2,2))
-  
   plot(dta)
-  
   dev.off()
   
 }
@@ -267,9 +297,7 @@ write_pdf <- function(x){
   )
   
   par(mfrow = c(2,2))
-  
   plot(dta)
-  
   dev.off()
   
 }
