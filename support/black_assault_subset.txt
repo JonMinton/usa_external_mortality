@@ -1,0 +1,56 @@
+$female
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.057364 -0.023080 -0.002725  0.016194  0.067359 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -63.585285  39.904606  -1.593  0.11914    
+year          0.030436   0.020263   1.502  0.14114    
+k1970        -0.035382   0.022663  -1.561  0.12655    
+k1978        -0.012739   0.009954  -1.280  0.20817    
+k1982         0.023098   0.008270   2.793  0.00805 ** 
+k1994        -0.047528   0.004763  -9.979 2.72e-12 ***
+k2002         0.037737   0.006058   6.229 2.49e-07 ***
+k2010        -0.013505   0.011567  -1.168  0.25006    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.03572 on 39 degrees of freedom
+Multiple R-squared:  0.9619,	Adjusted R-squared:  0.9551 
+F-statistic: 140.8 on 7 and 39 DF,  p-value: < 2.2e-16
+
+
+$male
+
+Call:
+lm(formula = lg10mr ~ year + k1970 + k1978 + k1982 + k1994 + 
+    k2002 + k2010, data = x)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.082860 -0.035583  0.004911  0.033209  0.084179 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -9.416e+01  5.175e+01  -1.819 0.076540 .  
+year         4.633e-02  2.628e-02   1.763 0.085735 .  
+k1970       -6.140e-02  2.939e-02  -2.089 0.043271 *  
+k1978       -3.581e-04  1.291e-02  -0.028 0.978010    
+k1982        3.006e-02  1.073e-02   2.803 0.007853 ** 
+k1994       -4.030e-02  6.177e-03  -6.525  9.7e-08 ***
+k2002        2.803e-02  7.857e-03   3.568 0.000973 ***
+k2010       -2.146e-02  1.500e-02  -1.431 0.160458    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.04632 on 39 degrees of freedom
+Multiple R-squared:  0.7436,	Adjusted R-squared:  0.6976 
+F-statistic: 16.16 on 7 and 39 DF,  p-value: 9.242e-10
+
+
