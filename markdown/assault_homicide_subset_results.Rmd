@@ -1,0 +1,192 @@
+---
+title: "Assault/Homicide Mortality for young Black adult males in USA"
+author: "Jon Minton"
+date: "23 April 2016"
+output: word_document
+---
+# Introduction
+
+This document will present analyses for death rate trends due to Assault/Homicide for young adult African Americans (aged 15 to 34 years), and the relationship, or otherwise, between this and whether Republicans or Democrats are in power. 
+
+
+# Data Management 
+
+First to load the packages and the data. (Not displayed) 
+```{r load_packages_and_data, include = F}
+
+rm(list=ls())
+
+
+require(knitr)
+require(readr)
+require(plyr)
+require(tidyr)
+require(dplyr)
+require(stringr)
+require(car)
+
+require(xts)
+require(zoo)
+require(mFilter)
+require(lubridate)
+
+require(ggplot2)
+require(lattice)
+require(latticeExtra)
+require(RColorBrewer)
+require(grid)
+
+# Load data 
+
+dta <-  read_csv("../data/tidied/icd_8_to_10_8fold.csv")
+
+```
+
+The dataset looks as follows
+
+```{r}
+dta
+
+```
+
+Now to create the subgroup of interest:
+
+```{r create_subgroup, cache = T}
+
+dta_subset <- dta %>% 
+  filter(race =="black") %>% 
+  filter(age %in% c("15-19", "20-24", "25-34")) %>% 
+  filter(cause == "assault") %>%
+  select(year, sex, death_count, population_count) %>% 
+  group_by(year, sex) %>% 
+  summarise(
+    death_count = sum(death_count), 
+    population_count = sum(population_count)
+  ) %>% 
+  mutate(rep = ifelse(year %in% c(2010:2014, 1994:2001, 1978:1981, 1968:1969), 1, 0)) 
+
+dta_subset
+
+```
+
+# Figures 
+
+Here are some figures showing how the mortality rate due to this cause changed over time 
+
+```{r display_rates}
+
+dta_subset %>% 
+  mutate(death_rate = death_count / population_count) %>% 
+  ggplot(.) + 
+  geom_line(aes(x = year, y = death_rate, group = sex, linetype = sex))  + 
+  scale_y_log10()
+
+```
+
+We can see from this evidence of a very long-term fall throughout the period, but with a clear rise from around 1985 to the early 1990s, followed by a quick decline. For males the assault/homicide rates only fell back to mid 1980 levels by the late 1990s, whereas for females the decline since the early 1990s have been as follows. 
+
+# Table of deaths through assault/homicide per 100 000 against year
+
+A table showing the same results is as follows:
+
+```{r show_death_rate_tables}
+dta_subset %>% 
+  mutate(deaths_per_100000 = 100000 * death_count / population_count) %>% 
+  select(year, sex, deaths_per_100000) %>% 
+  spread(sex, deaths_per_100000) %>% 
+  kable(., digits = 0)
+
+```
+
+# Knotted models
+
+We first create a version of the dataset containing a series of dummy variables indicating the number of years each year is from each Presidency. Then, we run models regressing mortality rate against each of thse dummies
+
+```{r, echo=FALSE}
+
+dta_subset %>% mutate(
+  k1970 = ifelse( year > 1970, year - 1970, 0), 
+  k1978 = ifelse( year > 1978, year - 1978, 0),
+  k1982 = ifelse( year > 1982, year - 1982, 0),
+  k1994 = ifelse( year > 1994, year - 1994, 0), 
+  k2002 = ifelse( year > 2002, year - 2002, 0),
+  k2010 = ifelse( year > 2010, year - 2010, 0)
+) %>% 
+  mutate(
+    death_rate = death_count / population_count,
+    lg10mr = log(death_rate, 10) 
+    ) -> knotted 
+
+
+knotted
+
+models <- dlply(
+  knotted, 
+  .(sex), 
+  function(x) lm(lg10mr ~ year + k1970 + k1978 + k1982 + k1994+ k2002+ k2010, data = x)
+)
+
+
+```
+
+The summaries of the models are as follows:
+
+```{r display_models}
+fn <- function(x){
+  output <- summary(x) %>% round( 2)
+  
+  return(output)
+}
+
+llply(models, fn)
+```
+
+
+Question or query: should House and Senate control be included in regression as well as President?
+
+# Polynomial regressions
+
+This section will show the patterns of residuals of log mortality against 6th order polynomial against time, regressed on a dummy indicating Republican control. (I think...)
+
+
+```{r do_complicated_regression}
+
+dta_subset %>% 
+  mutate(death_rate = death_count / population_count, 
+         lg10mr = log(death_rate, 10)) %>% 
+  dlply(
+    ., 
+    .(sex), 
+    function(x) lm(lg10mr ~ poly(year, 6), data = x)
+  ) -> models_poly
+
+
+  do_both_stages <- function(x){
+    stage1 <- lm(lg10mr ~ poly(year, 6), data =x)
+    
+    residuals <- stage1$residuals
+    
+    df <- data.frame(res_y = residuals, rep = x$rep)
+    
+    stage2 <- lm(res_y ~ rep, data = df)
+    
+    output <- list(stage1 = stage1, stage2 = stage2)
+  }
+
+  both_stages  <- dta_subset %>% 
+    mutate(death_rate = death_count / population_count, 
+           lg10mr = log(death_rate, 10)) %>% 
+    dlply(., .(sex), do_both_stages)
+  
+  
+
+ldply(both_stages, function(x) {x[["stage2"]][["fitted.values"]]}) %>% 
+  tbl_df %>% 
+  gather(key = obs, value = fitted, -sex) %>% 
+  mutate(obs = as.numeric(obs)) %>% 
+  arrange(sex) %>% 
+  ggplot(.) + 
+  geom_point(aes(x = obs, y = fitted, colour = sex, group = sex))
+
+
+```

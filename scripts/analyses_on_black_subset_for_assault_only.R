@@ -2,8 +2,6 @@
 
 # Black, death from assault/homicide, age group 15 to 34
 
-# 
-
 # to assess the influence (or otherwise) of party in power on mortality trends 
 
 
@@ -28,9 +26,7 @@ require(RColorBrewer)
 require(grid)
 
 
-
 dta <-  read_csv("data/tidied/icd_8_to_10_8fold.csv")
-
 
 dta_subset <- dta %>% 
   filter(race =="black") %>% 

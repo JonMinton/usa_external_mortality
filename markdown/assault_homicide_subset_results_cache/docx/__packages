@@ -1,0 +1,15 @@
+base
+readr
+plyr
+tidyr
+dplyr
+stringr
+car
+zoo
+xts
+mFilter
+lubridate
+ggplot2
+lattice
+RColorBrewer
+latticeExtra
