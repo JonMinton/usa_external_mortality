@@ -1,23 +1,26 @@
 ---
-title: "Assault/Homicide Mortality for young Black adult males in USA"
+title: "black_assault_subgroup_analyses"
 author: "Jon Minton"
-date: "23 April 2016"
+date: "3 May 2016"
 output: word_document
 ---
-# Introduction
-
-This document will present analyses for death rate trends due to Assault/Homicide for young adult African Americans (aged 15 to 34 years), and the relationship, or otherwise, between this and whether Republicans or Democrats are in power. 
 
 
-# Data Management 
+## Introduction 
 
-First to load the packages and the data. (Not displayed) 
-```{r load_packages_and_data, include = F}
+This document will present a series of analyses relating to assault/homicide related death trends in young adult Black Non-Hispanic (BNH) males. 
+
+To start with, I will load various dependencies and set various options that allow existing R stripts to be rendered as a PDF document.
+
+```{r setup, echo = F, message = F, warning = F}
+rm(list=ls())
+# Code chunk example from http://stackoverflow.com/questions/24585254/working-with-knitr-using-subdirectories
+library(knitr)
+opts_knit$set(root.dir=normalizePath('../'))
+
 
 rm(list=ls())
 
-
-require(knitr)
 require(readr)
 require(plyr)
 require(tidyr)
@@ -35,24 +38,30 @@ require(lattice)
 require(latticeExtra)
 require(RColorBrewer)
 require(grid)
-
-# Load data 
-
-dta <-  read_csv("../data/tidied/icd_8_to_10_8fold.csv")
-
 ```
 
-The dataset looks as follows
 
-```{r}
+Now to start to load and filter the data:
+
+```{r load_data}
+
+dta <-  read_csv("data/tidied/icd_8_to_10_8fold.csv")
+
 dta
 
+# Which age groups for which years?
+dta %>% xtabs(~ year + age, data = .)
+
+# What discrete types of death are available?
+
+dta %>% group_by(cause) %>% tally
+
 ```
 
-Now to create the subgroup of interest:
+We decided previously to look at the age group 15 to 34 years, to focus on BNH, and to look at deaths through assault and homicide. 
+Additionally, we want to add a variable indicating for which years there was a Republican Presidency. 
 
-```{r create_subgroup, cache = T}
-
+```{r, echo=FALSE}
 dta_subset <- dta %>% 
   filter(race =="black") %>% 
   filter(age %in% c("15-19", "20-24", "25-34")) %>% 
@@ -63,49 +72,18 @@ dta_subset <- dta %>%
     death_count = sum(death_count), 
     population_count = sum(population_count)
   ) %>% 
-  mutate(rep = ifelse(year %in% c(2010:2014, 1994:2001, 1978:1981, 1968:1969), 1, 0)) 
+  mutate(rep = ifelse(year %in% c(2010:2014, 1994:2001, 1978:1981, 1968:1969), 1, 0)) # Republican dummy
 
 dta_subset
-
 ```
 
-# Figures 
 
-Here are some figures showing how the mortality rate due to this cause changed over time 
+Next, we produce another variant that allows the log mortality rate to vary as a function of time in years since each change in Presidency between parties, in a new dataframe called 'knotted'
+```{r}
 
-```{r display_rates}
-
-dta_subset %>% 
-  mutate(death_rate = death_count / population_count) %>% 
-  ggplot(.) + 
-  geom_line(aes(x = year, y = death_rate, group = sex, linetype = sex))  + 
-  scale_y_log10()
-
-```
-
-We can see from this evidence of a very long-term fall throughout the period, but with a clear rise from around 1985 to the early 1990s, followed by a quick decline. For males the assault/homicide rates only fell back to mid 1980 levels by the late 1990s, whereas for females the decline since the early 1990s have been as follows. 
-
-# Table of deaths through assault/homicide per 100 000 against year
-
-A table showing the same results is as follows:
-
-```{r show_death_rate_tables}
-dta_subset %>% 
-  mutate(deaths_per_100000 = 100000 * death_count / population_count) %>% 
-  select(year, sex, deaths_per_100000) %>% 
-  spread(sex, deaths_per_100000) %>% 
-  kable(., digits = 0)
-
-```
-
-# Knotted models
-
-We first create a version of the dataset containing a series of dummy variables indicating the number of years each year is from each Presidency. Then, we run models regressing mortality rate against each of thse dummies
-
-```{r, echo=FALSE}
 
 dta_subset %>% mutate(
-  k1970 = ifelse( year > 1970, year - 1970, 0), 
+  k1970 = ifelse( year > 1970, year - 1970, 0), # JAVIER: IS THIS CORRECT?
   k1978 = ifelse( year > 1978, year - 1978, 0),
   k1982 = ifelse( year > 1982, year - 1982, 0),
   k1994 = ifelse( year > 1994, year - 1994, 0), 
@@ -117,52 +95,170 @@ dta_subset %>% mutate(
     lg10mr = log(death_rate, 10) 
     ) -> knotted 
 
-
 knotted
+```
 
-models <- dlply(
+## First analysis: model of log mort against knots
+
+We first produce two separate models, one for each sex, of log mortality against the knots 
+
+```{r}
+
+
+models <- dlply( # This code runs the model
   knotted, 
   .(sex), 
   function(x) lm(lg10mr ~ year + k1970 + k1978 + k1982 + k1994+ k2002+ k2010, data = x)
 )
 
+llply(models, summary) # This code prints the summary for each gender's model
 
 ```
 
-The summaries of the models are as follows:
+We might also want to compare the fitted against the actual values 
 
-```{r display_models}
-fn <- function(x){
-  output <- summary(x) %>% round( 2)
-  
-  return(output)
+```{r}
+tmp <- knotted %>% 
+  select(year, sex, actual = lg10mr)
+
+tmp_female <- tmp %>% filter(sex == "female")
+tmp_male <- tmp %>% filter(sex == "male")
+
+tmp_female$fitted <- models[["female"]][["fitted.values"]]
+tmp_male$fitted <- models[["male"]][["fitted.values"]]
+
+fitted_actual_comparisons <- bind_rows(tmp_female, tmp_male)
+
+rm(tmp, tmp_female, tmp_male)
+
+fitted_actual_comparisons
+
+fitted_actual_comparisons %>% 
+  ggplot(., aes(x = year, group = sex, colour = sex)) + 
+  geom_line(aes(y = fitted)) + 
+  geom_point(aes(y = actual)) 
+
+```
+
+Interestingly, it seems from the figure above that the 'elbows' built into the linear model do not quite match the most likely points of change. In particular, mortality rates continued to deteriorate until around 1985 for both sexes, a log of around three years from change in regime to change in trend. Then, in the 1990s, changes in mortality rates LED change in regime by around four years. The change in 2000, by contrast, seems more synchronised with changes (and improvements) in death rate trends.
+
+## Additional (interrim) exercise: polynomials with year 
+
+As an interrim modelling analysis, here are some comparative model fits using different numbers of polynomial on year. These are compared using AIC and BIC.
+
+```{r polycompare}
+simple <- knotted %>% 
+  select(year, sex, lg10mr) %>% 
+  ungroup %>% 
+  mutate(year2 = year - min(year)) # set to 1968 == 0
+
+fn <- function(k){
+  output <- lm(lg10mr ~ poly(year2, k) * sex, data = simple) 
 }
 
-llply(models, fn)
+tmp <- llply(1:16, fn)
+
+results <- data_frame(
+  poly = 1:16, 
+  aic = sapply(tmp, AIC),
+  bic = sapply(tmp, BIC)
+)
+
+results %>% gather(measure, value, aic, bic) %>% 
+  ggplot(., aes(x = factor(poly), y = value, group = measure, colour = measure)) + 
+  geom_line() + geom_point() + 
+  labs(y = "penalised model fit (lower is better)")
+
+rm(tmp, results)
+
 ```
 
+This suggests that both 2nd order and 6th order polynomials seem reasonable fits, although as might be expected the fit tends to improve with the number of polynomials, even when adjusted (penalised) for model complexity using AIC or BIC. Interestingly, the penalised fit continues to improve up to around the 12th order, which could be telling as there are 47 years, which divided by 4, the number of years between presidential elections, equals 12 to the nearest whole number.
+Let's now look at the 2nd, 6th and 12th order polynomial fits against the actual data.
 
-Question or query: should House and Senate control be included in regression as well as President?
+```{r}
 
-# Polynomial regressions
+fit_poly2 <- lm(lg10mr ~ poly(year2, 2) * sex, data = simple)
+fit_poly6 <- lm(lg10mr ~ poly(year2, 6) * sex, data = simple)
+fit_poly12 <- lm(lg10mr ~ poly(year2, 12) * sex, data = simple)
 
-This section will show the patterns of residuals of log mortality against 6th order polynomial against time, regressed on a dummy indicating Republican control. (I think...)
+
+summary(fit_poly2)
+summary(fit_poly6)
+summary(fit_poly12)
+
+comparisons <- simple %>% 
+  select(year, sex, actual = lg10mr) 
+
+comparisons$predicted_2 <- fit_poly2$fitted.values
+comparisons$predicted_6 <- fit_poly6$fitted.values
+comparisons$predicted_12 <- fit_poly12$fitted.values
+
+comparisons <- comparisons %>% gather(model, prediction, predicted_2, predicted_6, predicted_12)
+
+comparisons %>% 
+  ggplot(., aes(x = year))  +
+  geom_point(aes(y = actual)) + 
+  geom_line(aes(y = prediction, group = model, colour = model)) + 
+  facet_wrap(~ sex)
+
+```
+
+We can see from the above that the 12th order polynomial has a close fit to the data, including possible four year cycles in the rates which may be indicative of the electoral cycle influencing the trends.
+This intuition is explored further in the following exercise 
 
 
-```{r do_complicated_regression}
+## Detrending exercises 
 
-dta_subset %>% 
+Given the exploratory analyses above, I will now look at the residuals on Republican associated with the 12th order polynomial, corresponding approximately to a 4 year cycle,  as well as 6th order polynomial, corresponding approximately to an 8 year cycle. 
+
+```{r detrending}
+
+# Exercise 2 --------------------------------------------------------------
+
+# Those trends are bumpy.  But to run at least a first approximation, let's do two detrending exercises.
+# 
+# 
+# E1. Let's generate a 6th order polynomial function of time.  
+# Create 6 variables, where t1=year-1968, t2=t1^2, t3=t1^3... t6=t1^6.  Then run the following model:
+#   
+#   y = a + b1*t + b2*t2 +... b6*t6 + e     [2]
+# 
+# recover the residuals of y (again, for each race-sex (4), age-group (adults), and mortality cause (3)). 
+# Then run this regression:
+#   
+#   res_y = a + b1*rep + e     [3]
+# 
+# where rep is the Republican dummy.  Recover the fitted values and plot them.
+# 
+
+model_poly_6 <- dta_subset %>%
+  ungroup() %>%
   mutate(death_rate = death_count / population_count, 
-         lg10mr = log(death_rate, 10)) %>% 
-  dlply(
-    ., 
-    .(sex), 
-    function(x) lm(lg10mr ~ poly(year, 6), data = x)
-  ) -> models_poly
+         lg10mr = log(death_rate, 10),
+         year2 = year - min(year)
+         ) %>% 
+  lm(lg10mr ~ poly(year, 6) * sex, data = .)
 
+model_poly_12 <- dta_subset %>%
+  ungroup() %>%
+  mutate(death_rate = death_count / population_count, 
+         lg10mr = log(death_rate, 10),
+         year2 = year - min(year)
+         ) %>% 
+  lm(lg10mr ~ poly(year, 12) * sex, data = .)
 
-  do_both_stages <- function(x){
-    stage1 <- lm(lg10mr ~ poly(year, 6), data =x)
+AIC(model_poly_6, model_poly_12)
+BIC(model_poly_6, model_poly_12)
+
+# Interestingly AIC and BIC now disagree: AIC suggests 12th order, BIC suggests 
+# 6th order
+
+# Now to return to doing separate models for males and females separately in the 
+# analyses also using residuals
+
+do_both_stages <- function(x, k){
+    stage1 <- lm(lg10mr ~ poly(year, k), data =x)
     
     residuals <- stage1$residuals
     
@@ -173,20 +269,133 @@ dta_subset %>%
     output <- list(stage1 = stage1, stage2 = stage2)
   }
 
-  both_stages  <- dta_subset %>% 
+both_stages_6  <- dta_subset %>% 
     mutate(death_rate = death_count / population_count, 
            lg10mr = log(death_rate, 10)) %>% 
-    dlply(., .(sex), do_both_stages)
-  
+    dlply(., .(sex), do_both_stages, k = 6)
+
+both_stages_12  <- dta_subset %>% 
+    mutate(death_rate = death_count / population_count, 
+           lg10mr = log(death_rate, 10)) %>% 
+    dlply(., .(sex), do_both_stages, k = 12)
+
+AIC(both_stages_6$male$stage1, both_stages_12$male$stage1)
+BIC(both_stages_6$male$stage1, both_stages_12$male$stage1)
+
+AIC(both_stages_6$female$stage1, both_stages_12$female$stage1)
+BIC(both_stages_6$female$stage1, both_stages_12$female$stage1)
+```
+
+
+Interestingly, with separate models for males and females, the AIC and BIC are now consistent in terms of relative preference, and suggest the 12th order model has a better penalised model fit than the 6th order model. 
+
+Let's now compare the residuals against rep for each of the four models (male, female, 12th order, 6th order)
+
+
+```{r}
+
   
 
-ldply(both_stages, function(x) {x[["stage2"]][["fitted.values"]]}) %>% 
+ldply(both_stages_6, function(x) {x[["stage2"]][["fitted.values"]]}) %>% 
   tbl_df %>% 
   gather(key = obs, value = fitted, -sex) %>% 
   mutate(obs = as.numeric(obs)) %>% 
   arrange(sex) %>% 
   ggplot(.) + 
-  geom_point(aes(x = obs, y = fitted, colour = sex, group = sex))
+  geom_point(aes(x = obs, y = fitted, colour = sex, group = sex)) + 
+  geom_hline(aes(yintercept = 0)) + labs(x = "years since start", title = "6th order")
+
+
+ldply(both_stages_12, function(x) {x[["stage2"]][["fitted.values"]]}) %>% 
+  tbl_df %>% 
+  gather(key = obs, value = fitted, -sex) %>% 
+  mutate(obs = as.numeric(obs)) %>% 
+  arrange(sex) %>% 
+  ggplot(.) + 
+  geom_point(aes(x = obs, y = fitted, colour = sex, group = sex)) + 
+  geom_hline(aes(yintercept = 0)) + labs(x = "years since start", title = "12th order")
+
+```
+
+So, what is the comparison between males and females, and 6th order and 12th order polynomial, showing? 
+To me, it appears to be that, with the model that better represents the 4 year cycle (i.e. 12th order poly), the effect of presidency is much stronger on males than females. 
+
+
+## HP filter-based models
+
+
+
+```{r}
+
+# Exercise 2.2 ------------------------------------------------------------
+
+# E2. Detrend y using the Hodrick-Prescott (HP) filter (there should be a R package that does that). 
+# There are two conventional values for the smoothing parameter  for annual data: 6.25 and 100. 
+# Please use both since they usually do vary the detrending a lot.  
+# Once you detrended y using HP, then run equation 3, where res_y will be the 
+# detrended values of y using HP, and plot the fitted values.
+
+# Need to first convert the data to a timeseries format
+
+# actually two separate dataseries - one for males and one for females
+
+fn <- function(x){
+  y <- data.frame(year = as.Date(as.character(x$year), format = "%Y"), value = x$death_rate)
+  output <- xts(y$value, y$year)
+  return(output)
+}
+
+dta_list <- dta_subset %>% 
+  mutate(death_rate = death_count / population_count) %>%  
+  mutate(death_rate = log(death_rate, 10)) %>% 
+  dlply(., .(sex), fn)
+
+
+dta_list_detrended_100 <- llply(dta_list, hpfilter, freq = 100)
+dta_list_detrended_6_25 <- llply(dta_list, hpfilter, freq = 6.25)
+
+fn2 <- function(x){
+  md_part <- paste0("-", str_split(today(), "\\-", n = 2)[[1]][[2]]) # the filter above adds the month and the day to years,
+  # this needs to be removed using the lines above (from lubridate) and below
+  year <- dimnames(x$trend)[1][[1]]  %>% str_replace_all(., md_part, "")  %>% as.numeric()
+  output <- data.frame(year = year, cycle = x$cycle, trend = x$trend[,1])
+  return(output)
+}
+
+
+dta_df_detrended_100 <- ldply(dta_list_detrended_100, fn2) %>% 
+  tbl_df %>% rename(sex = .id)
+
+dta_df_detrended_6_25 <- ldply(dta_list_detrended_6_25, fn2) %>% 
+  tbl_df %>% rename(sex = .id)
+
+dta_df_detrended_100 <- dta_subset  %>% 
+  select(year, rep)  %>% 
+  distinct %>% 
+  right_join(dta_df_detrended_100) 
+
+dta_df_detrended_6_25 <- dta_subset  %>% 
+  select(year, rep)  %>% 
+  distinct %>% 
+  right_join(dta_df_detrended_6_25) 
+# 
+# write_csv(x = dta_df_detrended_100, path = "data/filtered/black_assault_subset_detrended_100.csv")
+# write_csv(x = dta_df_detrended_6_25, path = "data/filtered/black_assault_subset_detrended_6_25.csv")
+# 
+# 
+# 
+# # display model summaries too 
+# 
+# sink(file = "support/hp_100_outputs.txt", split = T)
+# llply(mdl_hp_100, summary)
+# sink()
+# 
+# sink(file = "support/hp_6_25_outputs.txt", split = T)
+# llply(mdl_hp_6_25, summary)
+# sink()
+# 
+# 
 
 
 ```
+
