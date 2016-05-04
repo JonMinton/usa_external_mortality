@@ -1,8 +1,8 @@
 ---
-title: "black_assault_subgroup_analyses"
+title: "Black Assault death trends analysis"
 author: "Jon Minton"
 date: "3 May 2016"
-output: word_document
+output: html_document
 ---
 
 
@@ -35,7 +35,6 @@ require(lubridate)
 
 require(ggplot2)
 require(lattice)
-require(latticeExtra)
 require(RColorBrewer)
 require(grid)
 ```
@@ -323,7 +322,7 @@ To me, it appears to be that, with the model that better represents the 4 year c
 
 ## HP filter-based models
 
-
+We will turn to filter-based models, which separate values over time into cycle and trend components. The smoothing parameters used in the filter affect the values of both components, and so two different smoothing parameters will be considered, 6.25 and 100.00. 
 
 ```{r}
 
@@ -354,6 +353,8 @@ dta_list <- dta_subset %>%
 dta_list_detrended_100 <- llply(dta_list, hpfilter, freq = 100)
 dta_list_detrended_6_25 <- llply(dta_list, hpfilter, freq = 6.25)
 
+
+
 fn2 <- function(x){
   md_part <- paste0("-", str_split(today(), "\\-", n = 2)[[1]][[2]]) # the filter above adds the month and the day to years,
   # this needs to be removed using the lines above (from lubridate) and below
@@ -369,6 +370,9 @@ dta_df_detrended_100 <- ldply(dta_list_detrended_100, fn2) %>%
 dta_df_detrended_6_25 <- ldply(dta_list_detrended_6_25, fn2) %>% 
   tbl_df %>% rename(sex = .id)
 
+
+
+
 dta_df_detrended_100 <- dta_subset  %>% 
   select(year, rep)  %>% 
   distinct %>% 
@@ -378,24 +382,60 @@ dta_df_detrended_6_25 <- dta_subset  %>%
   select(year, rep)  %>% 
   distinct %>% 
   right_join(dta_df_detrended_6_25) 
-# 
-# write_csv(x = dta_df_detrended_100, path = "data/filtered/black_assault_subset_detrended_100.csv")
-# write_csv(x = dta_df_detrended_6_25, path = "data/filtered/black_assault_subset_detrended_6_25.csv")
-# 
-# 
-# 
-# # display model summaries too 
-# 
-# sink(file = "support/hp_100_outputs.txt", split = T)
-# llply(mdl_hp_100, summary)
-# sink()
-# 
-# sink(file = "support/hp_6_25_outputs.txt", split = T)
-# llply(mdl_hp_6_25, summary)
-# sink()
-# 
-# 
+
+
+
+
+dta_df_detrended_100 <- dta_df_detrended_100 %>% mutate(filter = 100)
+dta_df_detrended_6_25 <- dta_df_detrended_6_25 %>% mutate(filter = 6.25)
+
+
+
+dta_df_detrended <- bind_rows(dta_df_detrended_100, dta_df_detrended_6_25)
+dta_df_detrended <- dta_df_detrended %>% 
+  left_join(simple) %>% 
+  select( -year2) %>% 
+  rename(actual = lg10mr) %>% 
+  mutate(filter = factor(filter))
+
+dta_df_detrended %>% 
+  ggplot(., aes(x = year)) +
+  geom_point(aes(y = actual)) +
+  geom_line(aes(y = trend, colour = filter, group = filter)) + 
+  facet_wrap(~ sex) + 
+  labs(y = "trend", title = "Trend")
+
+dta_df_detrended %>% 
+  ggplot(., aes(x = year)) +
+  geom_line(aes(y = cycle, colour = filter, group = filter)) + 
+  facet_wrap(~ sex) + 
+  labs(y = "cycle", title = "cycle")
+
+```
+
+Of the two variants of the model, the parameter 6.25 appears to provide a much closer fit, even though it does not appear to be as close as a 12th order polynomial. 
+
+We will now consider the relationship between cycle and rep
+
+```{r}
+
+
+dta_df_detrended  %>% filter(sex == "female", filter == 100)  %>% lm(cycle ~ rep, .)  %>% summary
+dta_df_detrended  %>% filter(sex == "male", filter == 100)  %>% lm(cycle ~ rep, .)  %>% summary
+
+dta_df_detrended  %>% filter(sex == "female", filter == 6.25)  %>% lm(cycle ~ rep, .)  %>% summary
+dta_df_detrended  %>% filter(sex == "male", filter == 6.25)  %>% lm(cycle ~ rep, .)  %>% summary
 
 
 ```
+
+In each of the above regressions the coefficient on rep is negative, which seems to be the 'wrong' direction (i.e. lower when reps in office). However in no case, for either sex or for either filter, is the coefficient on rep statistically significant. 
+
+
+## Suggestions for additional analysis 
+
+* More systematically explore the effect of other filter values 
+* Try to extract something like AIC or BIC if possible for different filter-based models 
+* Add more terms to model predicting cycle, for example socioeconomic variables
+
 
