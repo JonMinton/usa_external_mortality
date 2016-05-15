@@ -71,7 +71,7 @@ dta_subset <- dta %>%
     death_count = sum(death_count), 
     population_count = sum(population_count)
   ) %>% 
-  mutate(rep = ifelse(year %in% c(2010:2014, 1994:2001, 1978:1981, 1968:1969), 1, 0)) # Republican dummy
+  mutate(rep = ifelse(year %in% c(2010:2014, 1994:2001, 1978:1981, 1968:1969), 0, 1)) # Republican dummy
 
 dta_subset
 ```
@@ -426,6 +426,102 @@ dta_df_detrended  %>% filter(sex == "male", filter == 100)  %>% lm(cycle ~ rep, 
 dta_df_detrended  %>% filter(sex == "female", filter == 6.25)  %>% lm(cycle ~ rep, .)  %>% summary
 dta_df_detrended  %>% filter(sex == "male", filter == 6.25)  %>% lm(cycle ~ rep, .)  %>% summary
 
+
+```
+
+## Fourier series 
+
+In this section we explore some Fourier series decompositions 
+
+```{r fourier}
+
+# let's do separately for males and females
+
+dta_ss_f <- dta_subset %>% ungroup %>% filter(sex == "female") %>% mutate(lmr = log(death_count / population_count, 10))
+dta_ss_m <- dta_subset %>% ungroup %>% filter(sex == "male") %>% mutate(lmr = log(death_count / population_count, 10))
+
+# from 
+# http://www.di.fc.ul.pt/~jpn/r/fourier/fourier.html
+plot_frequency_spectrum <- function(X.k, xlimits=c(0,length(X.k))) {
+  plot.data  <- cbind(0:(length(X.k)-1), Mod(X.k))
+
+  # TODO: why this scaling is necessary?
+  plot.data[2:length(X.k),2] <- 2*plot.data[2:length(X.k),2] 
+  
+  plot(plot.data, t="h", lwd=2, main="", 
+       xlab="Frequency (Hz)", ylab="Strength", 
+       xlim=xlimits, ylim=c(0,max(Mod(plot.data[,2]))))
+}
+
+
+X_k <- fft(dta_ss_m$lmr)
+
+plot_frequency_spectrum(X_k)
+
+
+# Linear regression approach 
+
+dta_ss_m <- dta_ss_m %>% mutate(tee =  1 + year - min(year))
+dta_ss_m <- dta_ss_m %>% mutate(Tee = max(tee))
+
+kc <- function(k, tee, Tee){
+  return(cos(2 * pi * k * (tee - 1) / Tee))
+}
+
+ks <- function(k, tee, Tee){
+  return(sin(2 * pi * k * (tee - 1) / Tee))
+}
+
+dta_ss_m <- dta_ss_m %>% mutate(
+  k01_c = kc(1, tee, Tee), k01_s = ks(1, tee, Tee),
+  k02_c = kc(2, tee, Tee), k02_s = ks(2, tee, Tee),
+  k03_c = kc(3, tee, Tee), k03_s = ks(3, tee, Tee),
+  k04_c = kc(4, tee, Tee), k04_s = ks(4, tee, Tee),
+  k05_c = kc(5, tee, Tee), k05_s = ks(5, tee, Tee),
+  k06_c = kc(6, tee, Tee), k06_s = ks(6, tee, Tee),
+  k07_c = kc(7, tee, Tee), k07_s = ks(7, tee, Tee),
+  k08_c = kc(8, tee, Tee), k08_s = ks(8, tee, Tee),
+  k09_c = kc(9, tee, Tee), k09_s = ks(9, tee, Tee),
+  k10_c = kc(10, tee, Tee), k10_s = ks(10, tee, Tee),
+  k11_c = kc(11, tee, Tee), k11_s = ks(11, tee, Tee),
+  k12_c = kc(12, tee, Tee), k12_s = ks(12, tee, Tee),
+  k13_c = kc(13, tee, Tee), k13_s = ks(13, tee, Tee),
+  k14_c = kc(14, tee, Tee), k14_s = ks(14, tee, Tee),
+  k15_c = kc(15, tee, Tee), k15_s = ks(15, tee, Tee),
+  k16_c = kc(16, tee, Tee), k16_s = ks(16, tee, Tee),
+  k17_c = kc(17, tee, Tee), k17_s = ks(17, tee, Tee),
+  k18_c = kc(18, tee, Tee), k18_s = ks(18, tee, Tee),
+  k19_c = kc(19, tee, Tee), k19_s = ks(19, tee, Tee),
+  k20_c = kc(20, tee, Tee), k20_s = ks(20, tee, Tee),
+  k21_c = kc(21, tee, Tee), k21_s = ks(21, tee, Tee),
+  k22_c = kc(22, tee, Tee), k22_s = ks(22, tee, Tee)
+)
+
+m_male <- lm(
+  lmr ~ k01_c + k01_s + 
+    k02_c + k02_s + 
+    k03_c + k03_s + 
+    k04_c + k04_s + 
+    k05_c + k05_s + 
+    k06_c + k06_s + 
+    k07_c + k07_s +
+    k08_c + k08_s + 
+    k09_c + k09_s +
+    k10_c + k10_s + 
+    k11_c + k11_s +
+    k12_c + k12_s +
+    k13_c + k13_s +
+    k14_c + k14_s + 
+    k15_c + k15_s +
+    k16_c + k16_s +
+    k17_c + k17_s + 
+    k18_c + k18_s +
+    k19_c + k19_s + 
+    k20_c + k20_s + 
+    k21_c + k21_s +
+    k22_c + k22_s - 1,
+  data = dta_ss_m
+)
 
 ```
 
